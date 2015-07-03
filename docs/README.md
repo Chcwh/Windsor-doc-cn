@@ -1,8 +1,8 @@
-﻿# Castle Windsor 文档
+﻿# Castle Windsor 中文文档
 
 <img align="right" src="images/windsor-logo.png">
 
-Castle Windsor 是最好最成熟的 [IoC容器](IoC.md) ，可用于 .NET 和 Silverlight。
+Castle Windsor 是最好最成熟的 [IoC容器](https://github.com/castleproject/Windsor/blob/master/docs/IoC.md) ，可用于 .NET 和 Silverlight。
 
 当前版本是 3.3.0， 发布于 2014 年 1 月。
 
@@ -30,7 +30,7 @@ king.RuleTheCastle();
 container.Dispose();
 ```
 
-那些 [（未翻译）installers](installers.md) 是什么？ 这里有一个。
+那些 [（未翻译）installers](https://github.com/castleproject/Windsor/blob/master/docs/installers.md) 是什么？ 这里有一个。
 
 ```csharp
 public class RepositoriesInstaller : IWindsorInstaller
@@ -50,51 +50,51 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 通过完成一步一步的教程例子学习Windsor。
 
-* [（未翻译）基础教程](basic-tutorial.md)
-* [（未翻译）简单 ASP.NET MVC 3 应用 (待观察)](mvc-tutorial-intro.md) - 从无到有一步一步开始。 此教程帮助你快速学习 Windsor 并对容器 API 的使用和如何最有效利用容器的模式有一定了解。
+* [（未翻译）基础教程](https://github.com/castleproject/Windsor/blob/master/docs/basic-tutorial.md)
+* [（未翻译）简单 ASP.NET MVC 3 应用 (待观察)](https://github.com/castleproject/Windsor/blob/master/docs/mvc-tutorial-intro.md) - 从无到有一步一步开始。 此教程帮助你快速学习 Windsor 并对容器 API 的使用和如何最有效利用容器的模式有一定了解。
 
 ## 文档
 
-* [（未翻译）Windsor 3.2 更新内容](whats-new-3.2.md)
-* [（未翻译）Windsor 3.1 更新内容](whats-new-3.1.md)
+* [（未翻译）Windsor 3.2 更新内容](https://github.com/castleproject/Windsor/blob/master/docs/whats-new-3.2.md)
+* [（未翻译）Windsor 3.1 更新内容](https://github.com/castleproject/Windsor/blob/master/docs/whats-new-3.1.md)
 
 ### 概念
 
-* [（未翻译）IoC 和 IoC 容器](IoC.md)
+* [（未翻译）IoC 和 IoC 容器](https://github.com/castleproject/Windsor/blob/master/docs/IoC.md)
 * [（未翻译）服务，组件和依赖](services-and-components.md)
-* [（未翻译）组件是如何创建的](how-components-are-created.md)
-* [（未翻译）组件是如何解析的](how-dependencies-are-resolved.md)
+* [（未翻译）组件是如何创建的](https://github.com/castleproject/Windsor/blob/master/docs/how-components-are-created.md)
+* [（未翻译）组件是如何解析的](https://github.com/castleproject/Windsor/blob/master/docs/how-dependencies-are-resolved.md)
 
 ### 使用容器
 
-* [（未翻译）使用容器 - 如何使用、在哪里使用](three-calls-pattern.md)
-* [（未翻译）Windsor installers - 怎样把你的组件告诉 Windsor](installers.md)
-* [（未翻译）注册 API 引用](fluent-registration-api.md)
-* [（未翻译）使用 XML 配置](xml-registration-reference.md)
-* [（未翻译）给容器传递参数](passing-arguments.md)
-* [（未翻译）AOP，代理，和拦截器](interceptors.md)
-* [（未翻译）调试和诊断支持](debugger-views.md)
-* [（未翻译）性能计数器支持](performance-counters.md)
+* [（未翻译）使用容器 - 如何使用、在哪里使用](https://github.com/castleproject/Windsor/blob/master/docs/three-calls-pattern.md)
+* [（未翻译）Windsor installers - 怎样把你的组件告诉 Windsor](https://github.com/castleproject/Windsor/blob/master/docs/installers.md)
+* [（未翻译）注册 API 引用](https://github.com/castleproject/Windsor/blob/master/docs/fluent-registration-api.md)
+* [（未翻译）使用 XML 配置](https://github.com/castleproject/Windsor/blob/master/docs/xml-registration-reference.md)
+* [（未翻译）给容器传递参数](https://github.com/castleproject/Windsor/blob/master/docs/passing-arguments.md)
+* [（未翻译）AOP，代理，和拦截器](https://github.com/castleproject/Windsor/blob/master/docs/interceptors.md)
+* [（未翻译）调试和诊断支持](https://github.com/castleproject/Windsor/blob/master/docs/debugger-views.md)
+* [（未翻译）性能计数器支持](https://github.com/castleproject/Windsor/blob/master/docs/performance-counters.md)
 
 ### 自定义容器
 
-* [（未翻译）扩展点概述](extension-points.md)
-* [（未翻译）Lifestyles](lifestyles.md)
-* [（未翻译）Lifecycle](lifecycle.md)
-* [（未翻译）Release Policy](release-policy.md)
-* [（未翻译）ComponentModel construction contributors](componentmodel-construction-contributors.md)
+* [（未翻译）扩展点概述](https://github.com/castleproject/Windsor/blob/master/docs/extension-points.md)
+* [（未翻译）Lifestyles](https://github.com/castleproject/Windsor/blob/master/docs/lifestyles.md)
+* [（未翻译）Lifecycle](https://github.com/castleproject/Windsor/blob/master/docs/lifecycle.md)
+* [（未翻译）Release Policy](https://github.com/castleproject/Windsor/blob/master/docs/release-policy.md)
+* [（未翻译）ComponentModel construction contributors](https://github.com/castleproject/Windsor/blob/master/docs/componentmodel-construction-contributors.md)
 
 ### 扩展容器
 
-* [（未翻译）设施](facilities.md)
+* [（未翻译）设施](https://github.com/castleproject/Windsor/blob/master/docs/facilities.md)
 
 ### 知道另一个容器
 
-* [（未翻译）Autofac 用户](windsor-for-autofac-users.md)
-* [（未翻译）StructureMap 用户](windsor-for-structuremap-users.md)
+* [（未翻译）Autofac 用户](https://github.com/castleproject/Windsor/blob/master/docs/windsor-for-autofac-users.md)
+* [（未翻译）StructureMap 用户](https://github.com/castleproject/Windsor/blob/master/docs/windsor-for-structuremap-users.md)
 
 ## 资源
 
-* [（未翻译）外部资源](external-resources.md) - screencasts, podcasts, etc
-* [（未翻译）FAQ](faq.md)
-* [（未翻译）路线图](roadmap.md)
+* [（未翻译）外部资源](https://github.com/castleproject/Windsor/blob/master/docs/external-resources.md) - screencasts, podcasts, etc
+* [（未翻译）FAQ](https://github.com/castleproject/Windsor/blob/master/docs/faq.md)
+* [（未翻译）路线图](https://github.com/castleproject/Windsor/blob/master/docs/roadmap.md)
