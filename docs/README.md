@@ -2,7 +2,7 @@
 
 <img align="right" src="images/windsor-logo.png">
 
-Castle Windsor 是最好最成熟的 [IoC容器](https://github.com/castleproject/Windsor/blob/master/docs/IoC.md) ，可用于 .NET 和 Silverlight。
+Castle Windsor 是最好最成熟的 [IoC容器](ioc.md) ，可用于 .NET 和 Silverlight。
 
 当前版本是 3.3.0， 发布于 2014 年 1 月。
 
@@ -63,7 +63,7 @@ public class RepositoriesInstaller : IWindsorInstaller
 * [IoC 和 IoC 容器](ioc.md)
 * [服务，组件和依赖](services-and-components.md)
 * [（未翻译）组件是如何创建的](https://github.com/castleproject/Windsor/blob/master/docs/how-components-are-created.md)
-* [（未翻译）组件是如何解析的](https://github.com/castleproject/Windsor/blob/master/docs/how-dependencies-are-resolved.md)
+* [（未翻译）依赖是如何解析的](https://github.com/castleproject/Windsor/blob/master/docs/how-dependencies-are-resolved.md)
 
 ### 使用容器
 
