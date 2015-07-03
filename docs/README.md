@@ -62,7 +62,7 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 * [IoC 和 IoC 容器](ioc.md)
 * [服务，组件和依赖](services-and-components.md)
-* [（未翻译）组件是如何创建的](https://github.com/castleproject/Windsor/blob/master/docs/how-components-are-created.md)
+* [组件是如何创建的](how-components-are-created.md)
 * [（未翻译）依赖是如何解析的](https://github.com/castleproject/Windsor/blob/master/docs/how-dependencies-are-resolved.md)
 
 ### 使用容器
