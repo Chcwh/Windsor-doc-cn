@@ -8,7 +8,7 @@
 
 ## 定位处理器（Locating handler）
 
-当组件被请求时由容器执行的第一步，是检查所请求的组件是否被注册到容器中。容器从其[命名子系统](subsystems.md)中查找组件，如果找不到该组件，容器会尝试[延迟-组件-加载器|延迟注册]，如果没有成功，一个'ComponentNotFoundException'将被抛出。
+当组件被请求时由容器执行的第一步，是检查所请求的组件是否被注册到容器中。容器从其[命名子系统](subsystems.md)中查找组件，如果找不到该组件，容器会尝试[延迟-组件-加载器|延迟注册]，如果没有成功，一个`ComponentNotFoundException`将被抛出。
 
 假设可以发现找到正确的组件，容器将轮询其[处理器](handlers.md)，并要求解析组件实例。
 
@@ -16,8 +16,8 @@
 
 处理器做了几件事情:
 
-* 它调用与它相关联的所有'ComponentResolvingDelegate'，让他们有机会在实际开始之前来影响它的决定。这里有个例子， 什么时候[委托传递到Fluent注册API的DynamicParameters方法](inline-dependencies.md#supplying-dynamic-dependencies)。（[Fluent注册API]fluent-registration-api.md)）
-* 如果未提供内嵌参数，它会检查该组件及其所有强制依赖是否能够解析。如果不能，抛出'HandlerException'异常。
+* 它调用与它相关联的所有`ComponentResolvingDelegate`，让他们有机会在实际开始之前来影响它的决定。这里有个例子， 什么时候[委托传递到Fluent注册API的DynamicParameters方法](inline-dependencies.md#supplying-dynamic-dependencies)。（[Fluent注册API](fluent-registration-api.md)）
+* 如果未提供内嵌参数，它会检查该组件及其所有强制依赖是否能够解析。如果不能，抛出`HandlerException`异常。
 * 最后，处理器要求[生命期方式管理器](lifestyles.md)解析该组件。
 
 ## 生命期方式管理器都做了什么
@@ -27,7 +27,7 @@
 ## 组件激活器都做了什么
 
 :information_source: **组件激活器:** 
-组件激活器负责创建组件的实例。各种激活器有各自的实现。当您通过'UsingFactoryMethod'创建组件时，您提供的委托将被调用以创建实例。[工厂支持设施](factory-support-facility.md)或[远程设施](remoting-facility.md)有它们自己的一套激活器，用于执行组件的自定义初始化。
+组件激活器负责创建组件的实例。各种激活器有各自的实现。当您通过`UsingFactoryMethod`创建组件时，您提供的委托将被调用以创建实例。[工厂支持设施](factory-support-facility.md)或[远程设施](remoting-facility.md)有它们自己的一套激活器，用于执行组件的自定义初始化。
 
 多数时候你应该使用 `DefaultComponentActivator` ，其工作流程如下:
 
