@@ -60,7 +60,7 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 ### 概念
 
-* [（未翻译）IoC 和 IoC 容器](https://github.com/castleproject/Windsor/blob/master/docs/IoC.md)
+* [IoC 和 IoC 容器](ioc.md)
 * [服务，组件和依赖](services-and-components.md)
 * [（未翻译）组件是如何创建的](https://github.com/castleproject/Windsor/blob/master/docs/how-components-are-created.md)
 * [（未翻译）组件是如何解析的](https://github.com/castleproject/Windsor/blob/master/docs/how-dependencies-are-resolved.md)
