@@ -1,26 +1,26 @@
-# Lifecycle
+# 生命周期
 
-## Introduction
+## 简介
 
-Simplified lifecycle of components:
+组件生命周期简化图：
 
 ![](images/lifecycle-simplified.png)
 
-Broadly speaking Windsor is a tool that controls creation and destructions of components. From the ten thousand foot view, the component's lifecycle consists of three steps:
+从广义上说，Windsor 是一个控制组件创建和销毁的工具。 总的来看，组件的生命周期包含三步：
 
-* creation - everything that happens within `container.Resolve` or similar method (see [How components are created](how-components-are-created.md) for more details).
-* usage - whatever you do with the component in your code
-* destruction - everything that happens within and/or after `container.ReleaseComponent` or when the component's lifetime scope is ending.
+* 创建 - 所有的事情都在 `container.Resolve` 或类似的方法内发生 (查看[组件是如何创建的](how-components-are-created.md)以了解详情)。
+* 使用 - 在你的代码中使用组件完成工作。
+* 销毁 - 所有的事情在`container.ReleaseComponent`之内/或之后或组件的生命期范围结束时发生。
 
-Windsor lets you plug into the lifecycle pipeline (creation and destruction) and invoke some additional logic, either external, or internal to the component by using lifecycle concerns (objects implementing one of two`ILifecycleConcern`-derived interfaces).
+Windsor 允许你插入到生命周期管道（创建和销毁）中，并调用一些额外的逻辑，无论是外部，还是内部的组件，通过使用lifecycle concerns （实现两个`ILifecycleConcern`派生接口的对象）。
 
 ## Creation - commission concerns
 
-Lifecycle concerns executed during creation of the component are called commission concerns. Implementation-wise they all implement the `ICommissionConcern` interface. They get executed after the component is instantiated and all of its dependencies are wired up. There are several standard ways of hooking a commission concern to the component.
+在组件创建期间执行的生命周期concerns被称为commission concerns。它们都实现了`ICommissionConcern`接口。它们在组件实例化和所有依赖关联完成后执行。有几种标准方式将一个commission concern挂接到组件。
 
-### The `OnCreate` method
+### `OnCreate` 方法
 
-When you register your component using the [fluent registration API](fluent-registration-api.md) you can use its [`OnCreate`](fluent-registration-api.md#oncreate) method to hook additional logic, that will be executed as a commission concern.
+当你使用[Fluent 注册 API](fluent-registration-api.md)注册组件时，你可以使用它的[`OnCreate`](fluent-registration-api.md#oncreate)方法挂接附加逻辑，其将会当做一个commission concern执行。
 
 ```csharp
 container.Register(
@@ -30,16 +30,15 @@ container.Register(
    );
 ```
 
-### The `IInitializable` interface
+### `IInitializable` 接口
 
-There are a couple of interfaces that when implemented by your components, receive special treatment from Windsor.
-One of them is `Castle.Core.IInitializable` which has just one method:
+有一对接口在被你的组件实现时，会受到 Windsor 的特殊处理。其中一个是`Castle.Core.IInitializable`，它只有一个方法：
 
 ```csharp
 void Initialize();
 ```
 
-When Windsor instantiates a component which implements this interface, it will then invoke the `Initialize` method during component commission.
+当 Windsor 实例化实现这个接口的组件时，它会在组件commission期间调用 `Initialize` 方法。
 
 ```csharp
 public class InitializableComponent : IInitializable
@@ -53,18 +52,18 @@ public class InitializableComponent : IInitializable
 }
 ```
 
-### The `ISupportInitialize` interface
+### `ISupportInitialize` 接口
 
-If you don't want to reference Castle assemblies in your domain and still want to benefit from Windsor's lifecycle management you can implement another interface:
+如果你不想在你的领域中引用 Castle 程序集，但是仍然想从 Windsor 的生命周期管理中获益，你可以实现另一个接口：
 
-`System.ComponentModel.ISupportInitialize` which is part of BCL and has two methods:
+`System.ComponentModel.ISupportInitialize` 是 BCL 的一部分，它有两个方法：
 
 ```csharp
 void BeginInit();
 void EndInit();
 ```
 
-When Windsor instantiates a component which implements this interface, it will then invoke the `BeginInit` method during component commission.
+当 Windsor 实例化实现这个接口的组件时，它会在组件commission期间调用 `BeginInit` 方法。
 
 ```csharp
 public class InitializableComponent: ISupportInitialize
@@ -82,13 +81,13 @@ public class InitializableComponent: ISupportInitialize
 }
 ```
 
-## Destruction - decommission concerns
+## 销毁 - decommission concerns
 
-Lifecycle concerns executed during destruction of the component are called decommission concerns. Implementation-wise they all implement `IDecommissionConcern` interface. They get executed when the component is released from the container, which may happen when it's released via `container.ReleaseComponent` method, the container is disposed, or its lifetime scope (for example web request) ends.
+在组件销毁期间执行的Lifecycle concerns被称为decommission concerns。它们都实现了`IDecommissionConcern`接口。它们在组件从容器释放时执行，即将会在通过`container.ReleaseComponent`方法释放时，容器销毁时，或组件的生命期范围结束时（比如Web请求）发生。
 
-### The `OnDestroy` method
+### `OnDestroy` 方法
 
-The method is analogous to `OnCreate`, and allows you to specify ad-hoc decommission concerns (code that will run when instance is released).
+这个方法类似于 `OnCreate` ，允许你指定临时 decommission concerns （代码将会在组件释放时执行）。
 
 ```csharp
 container.Register(Component.For<MyClass>()
@@ -97,39 +96,39 @@ container.Register(Component.For<MyClass>()
 );
 ```
 
-Note that if your class implements `IDisposable`, then `Dispose` will automatically be called on the object before your custom destroy function is invoked.
+注意如果你的类实现了  `IDisposable`，在你自定义的销毁函数调用之前，将会自动在对象上调用 `Dispose`。
 
-:warning: **Instance tracking and `OnDestroy`:** Notice that in order to decommission the object, Windsor will need to track it. Be mindful of that when managing usage of your component instances and make sure they get released when no longer needed.
+:warning: **实例跟踪和 `OnDestroy`:** 注意为了decommission对象，Windsor需要跟踪它。在管理组件实例的使用时，要注意确保在不需要的时候释放组件。 、
 
-### The `IDisposable` interface
+###  `IDisposable` 接口
 
-The `IDisposable` interface is the standard method of decommission in .NET and it is also supported by Windsor. Whenever Windsor creates a component that implements `IDisposable` it will then invoke its `Dispose` method when releasing the component.
+`IDisposable`接口是.NET中的标准decommission方法，也受到 Windsor 的支持。Windsor 创建一个实现了 `IDisposable` 的组件时，它将会在释放组件时调用组件的 `Dispose` 方法。
 
-:warning: **Windsor tracks components:** Notice that in order to support decommission properly Windsor holds reference to each components it creates*. That's why it's crucial to release components. Otherwise you may have to deal with increased memory consumption.
+:warning: **Windsor 跟踪组件:** 为了确保正确decommission组件，Windsor 持有它创建的每个组件的引用*。这就是为什么释放组件极其重要。否则你可能不得不面对内存消耗增加。
 
-:information_source: **Lifecycle and Release policy:** Above statement is not 100% accurate. [Release policy](release-policy.md) can opt out of tracking components. You then lose ability to perform proper destruction of the component, and it's generally discouraged to do so.
+:information_source: **生命周期和释放策略:** 上述声明是不是100％准确。 [释放策略](release-policy.md)可以免除组件跟踪。然后，你失去了执行组件正确销毁的能力，通常不建议这样做。
 
 ## Custom lifecycle concerns
 
-Windsor's lifecycle is not limited to only the concerns mentioned above. Component's lifecycle like everything in Windsor is extensible and you can extend it with your own concerns. In Windsor [Startable Facility](startable-facility.md) uses component lifecycle concerns to do its job.
+Windsor 的生命周期不限于上面提到的 concerns。组件的生命周期像 Windsor 里的所有东西一样都是可以扩展的，你可以用自己的concerns扩展它。在 Windsor [可启动设施](startable-facility.md) 里面使用组件生命周期concerns完成它的工作。
 
 ### Writing your own
 
-Lifecycle concerns are required to implement one of the following two interfaces: `Castle.Core.ICommissionConcern` or `Castle.Core.IDecommissionConcern`. The interfaces expose one method:
+生命周期concerns需要实现以下两个接口之一：`Castle.Core.ICommissionConcern` 或 `Castle.Core.IDecommissionConcern`。接口暴露了一个方法：
 
 ```csharp
 void Apply(ComponentModel model, object component)
 ```
 
-The first argument is the model of the component, and the second is its instance.
+第一个参数时组件模型，第二个是它的实例。
 
-### Attaching the lifecycle concerns
+### 附加生命周期 concerns
 
-You attach your custom lifecycle concern to the `ComponentModel` of the component you're interested in using the following code:
+附加自定义的生命周期concern到你感兴趣的组件的`ComponentModel`，使用下面的代码：
 
 ```csharp
 model.Lifecycle.Add(new MyCommissionConcern());
 model.Lifecycle.Add(new MyDecommissionConcern());
 ```
 
-:warning: **Use `ComponentModel` construction contributor:** As attaching lifecycle concerns is operation modifying `ComponentModel` you should always do it in a [ComponentModel construction contributor](componentmodel-construction-contributors.md).
+:warning: **Use `ComponentModel` construction contributor:** 由于附加生命周期concerns是修改`ComponentModel`的操作，你应该在 [ComponentModel construction contributor](componentmodel-construction-contributors.md)内附加。
