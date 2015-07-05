@@ -78,10 +78,10 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 ### 自定义容器
 
-* [（未翻译）扩展点概述](extension-points.md)
-* [（未翻译）Lifestyles](lifestyles.md)
-* [（未翻译）Lifecycle](lifecycle.md)
-* [（未翻译）Release Policy](release-policy.md)
+* [扩展点概述](extension-points.md)
+* [生命期类型](lifestyles.md)
+* [生命周期](lifecycle.md)
+* [释放策略](release-policy.md)
 * [（未翻译）ComponentModel construction contributors](componentmodel-construction-contributors.md)
 
 ### 扩展容器
