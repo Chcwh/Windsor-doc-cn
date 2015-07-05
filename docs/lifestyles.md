@@ -1,6 +1,6 @@
 # 生命期类型（Lifestyles）
 
-假如你有两个类: `HomeViewModel` 和 `ApplicationSettingsViewModel`，都依赖于 `IUserService`，它们是应该拥有IUserService的同一个实例，还是各自拥有自己的实例？当你打开应用的设置窗口，关闭它，然后再次打开，你应该获得`ApplicationSettingsViewModel`的同一个实例还是一个新实例？当组件的一个实例不在需要，谁和如何清理它：如果需要的话进行回收，解除事件聚合器的事件订阅？
+假如你有两个类: `HomeViewModel` 和 `ApplicationSettingsViewModel`，都依赖于 `IUserService`，它们是应该拥有IUserService的同一个实例，还是各自拥有自己的实例？当你打开应用的设置窗口，关闭它，然后再次打开，你应该获得`ApplicationSettingsViewModel`的同一个实例还是一个新实例？当组件的一个实例不在需要，谁来清理，如何清理（如果需要的话进行回收，解除事件聚合器的事件订阅等等）？
 
 答案是 - 看情况。行为取决于组件的生命期类型。生命期类型决定什么情况下实例可重用，什么时候释放（这是必要的清理步骤，然后让GC销毁它）。 
 
@@ -32,21 +32,21 @@ Transient与单例相反。Transient组件不会绑定到任何作用域。每�
 Container.Register(Component.For<MyTransientComponent>().LifestyleTransient());
 ```
 
-:warning: **Transient 可能被容器跟踪: 仅`Release` 你 `Resolve`的:** 一些人，特别是过去使用过某些其它容器 ，有时会忘记 Windsor 可能会跟踪transient组件。他们`Resolve`组件，但从不`Release` 它们。为了确保正确的组件生命周期管理 Windsor 可能跟踪这些组件。 这意味着，除非你释放他们，垃圾收集器将无法收回他们，你将最终导致事实上的内存泄漏。所以请记住这个有用的经验法则：记住 `Release` 那些你显式 `Resolve`的。
+:warning: **Transient 可能被容器跟踪: 仅`释放` 你 `解析`的:** 一些人，特别是过去使用过某些其它容器 ，有时会忘记 Windsor 可能会跟踪transient组件。他们`解析`组件，但从不`释放` 它们。为了确保正确的组件生命周期管理，Windsor 可能跟踪这些组件。 这意味着，除非你释放它们，否则垃圾收集器将无法收回它们，这最终导致事实上的内存泄漏。所以请记住这个有用的经验法则：记住 `释放` 那些你显式 `解析`的。
 
-:information_source: **transient有什么好处:** 当你想控制组件的生命期时，transient是一个好选择。 When you need new instance, with new state every time. 当然 transient 组件不需要是线程安全的，除非你将在多线程条件下使用。在大多数程序中你会发现你大多数的组件最后都是transient的。
+:information_source: **transient有什么好处:** 当你想控制组件的生命期时，transient是一个好选择。当你每次都需要全新的实例时。当然 transient 组件不需要是线程安全的，除非你将在多线程条件下使用。在大多数程序中你会发现你大多数的组件最后都是transient的。
 
 ### 每次Web请求（PerWebRequest）
 
-组件的实例会在一个单一的Web请求范围内共享。该实例将在Web请求的范围第一次请求时创建。显示释放它是无效的。实例将在web请求结束时释放。
+组件的实例会在一个单一的Web请求范围内共享。该实例将在Web请求的范围第一次请求时创建。显式释放它是无效的。实例将在web请求结束时释放。
 
-注册组件为每次Web请求:
+注册组件为PerWebRequest:
 
 ```csharp
 Container.Register(Component.For<MyPerWebRequestComponent>().LifestylePerWebRequest());
 ```
 
-:warning: **注册 `PerWebRequestLifestyleModule`:** 为了每个Web请求的正常运行需要一个`IHttpModule` - `Castle.MicroKernel.Lifestyle.PerWebRequestLifestyleModule`注册到 web.config 文件中:
+:warning: **注册 `PerWebRequestLifestyleModule`:** 为了PerWebRequest的正常运行需要将一个`IHttpModule` - `Castle.MicroKernel.Lifestyle.PerWebRequestLifestyleModule`注册到 web.config 文件中:
 
 ```xml
 <httpModules>
@@ -54,7 +54,7 @@ Container.Register(Component.For<MyPerWebRequestComponent>().LifestylePerWebRequ
 </httpModules>
 ```
 
-如果是IIS7 ，可能需要在 `system.webServer/modules` 区段中注册。
+如果是IIS7 ，可能需要在 `system.webServer/modules` 区段（section）中注册。
 
 ```xml
 <configuration>
@@ -68,12 +68,12 @@ Container.Register(Component.For<MyPerWebRequestComponent>().LifestylePerWebRequ
 
 ## 标准生命期类型: 不常见类型
 
-上面讨论的那些生命期类型满足大多数程序的需求。但是偶尔也需要更特定的生命期类型。
+上面讨论的那些生命期类型足以满足大多数程序的需求。但是偶尔也需要更特定的生命期类型。
 
 ### 范围（Scoped）
 
 Windsor 3 added option to specify arbitrary scope of component instance lifetime/reuse. Here's how you do it:
-Windsor 3 增加了选项用于指定组件实例的生命期/重用范围。你可以这样做：
+Windsor 3 增加了选项用于指定组件实例生命期/重用的范围。你可以这样做：
 
 ```csharp
 Container.Register(Component.For<MyScopedComponent>().LifestyleScoped());
@@ -129,7 +129,7 @@ Container.Register(Component.For<Repository>().LifestyleBoundTo<ViewModelBase>()
 
 :information_source: 这是 Windsor 3.2 中的新功能
 
-在某些情况下，与绑定到图上最远的匹配对象不同，你可能希望绑定到最近的对象。那就是`WelcomeScreenViewModel`将会与它的依赖（直接和间接的）共享`仓储`的实例。但是一旦一个依赖正好是另一个视图模型，该视图模型和它的依赖（直接和间接的）将会获得一个新的`仓储`的实例，除非某个依赖正好又是另一个依赖...... You get the idea。
+在某些情况下，与绑定到图上最远的匹配对象不同，你可能希望绑定到最近的对象。那就是`WelcomeScreenViewModel`将会与它的依赖（直接和间接的）共享`仓储`的实例。但是一旦一个依赖正好是另一个视图模型，该视图模型和它的依赖（直接和间接的）将会获得一个新的`仓储`的实例，除非某个依赖正好又是另一个视图模型......你懂的。
 
 这种情况下使用`BoundToNearest`注册 `仓储`。 
 
@@ -147,7 +147,7 @@ BoundTo(Func<IHandler[], IHandler> scopeRootBinder)
 
 You can pass a custom delegate that from the collection of the `IHandler`s representing components in the subgraph (from the outermost to innermost) selects the one you want to bind your component to.
 
-## 标准生命期类型: *极* 少使用的
+## 标准生命期类型: *极*少使用的类型
 
 上面描述的生命期类型，涵盖了99%的应用。读到这里就可以结束了，因为下面介绍的生命期方式你可能从不需要或从未见过。
 对于某些极端的情况，Windsor 提供了另外的生命期类型。
@@ -166,7 +166,7 @@ You can pass a custom delegate that from the collection of the `IHandler`s repre
 
 ####  `IRecyclable` 接口
 
-Windsor 为poolable组件提供特殊接口 - `Castle.Core.IRecyclable`。它只有一个方法:
+Windsor 为可池化（poolable）组件提供特殊接口 - `Castle.Core.IRecyclable`。它只有一个方法:
 
 ```csharp
 void Recycle();
@@ -174,11 +174,11 @@ void Recycle();
 
 该方法在组件返回到池中时被调用。组件可以使用它实现自定义初始化/清理逻辑。
 
-## Custom lifestyles
+## 自定义生命期类型
 
 允许你为组件设置自己的`ILifestyleManager`实现。 Also used be some facilities, like WCF Facility which provides two additional lifestyles - per WCF session and per WCF operation.
 
-## Setting lifestyle
+## 设置生命期类型
 
 指定生命期类型最常用的方式是通过注册API。你可以为单个组件设置生命期类型，像上面的例子那样。在注册类型集合时也能使用同样的方法（method）。
 这里有一个如何在注册时将你所有控制器注册为transient的例子：
