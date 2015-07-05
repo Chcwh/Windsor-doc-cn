@@ -1,22 +1,22 @@
-# Three Calls Pattern
+# 三个调用模式
 
-Inversion of Control (called IoC) frameworks are different from all other kinds of frameworks in that you don't see many calls to the framework in your code. In fact - in most applications (regardless of their size and complexity) you will only call the container directly in three places. That's the most common pattern of usage and Windsor supports it fully.
+IoC 框架与其他框架不同之处在于你不会在代码中看见许多对框架的调用。实际上，在大多数应用中（忽略它们的大小和复杂性）你仅在三个地方直接调用容器。这是最常用的使用模式，Windsor完全支持。
 
-## The Three Container Calls Pattern
+## 三个容器调用模式
 
-The pattern is called Three Calls. Sometimes it's referred to as RRR - Register, Resolve, Release - name used in [Mark Seemann's book about containers](http://www.manning.com/seemann/). As the name implies the container is only called in three places in the application, or more precisely; in your entry project.
+该模式被称为 Three Calls。有时被称为 RRR - 注册，解析，释放（Register, Resolve, Release） - 在 [Mark Seemann's book about containers](http://www.manning.com/seemann/)使用的名称。顾名思义，在应用中应用容器只需要在三个地方调用容器。更精确的说，在入口项目。
 
-:information_source: **What is entry project?** Entry project means either `Program.Main` method in `.exe` of your client application, `Application_Start` and `Application_End` in your web application or corresponding places in other kinds of applications.
+:information_source: **什么是入口项目？** 入口项目指的是`.exe`中的`Program.Main` 方法，web应用中的 `Application_Start` 和 `Application_End` 或 其他类型应用的对应地方。
 
-:information_source: **Yes, that also means in *Enterprise* application:** Newcomers to IoC find it hard to believe that you can build an "enterprise" "big", "real-world" application with the container and hardly explicitly use it. Yes, absolutely, you can. It's been done multiple times and works beautifully. As noted in the first paragraph - that's what inversion of control is all about.
+:information_source: **是的，这也意味着在 *企业级* 应用中:** IoC 新手很难相信，你可以使用容器构建一个“企业级”“大”，“真实”应用并且几乎没有明确的使用它。是的，绝对可以。它已经做过多次并且运行良好。就像第一段提到的那样，那就是IoC的全部。
 
-That also implies one more very important aspects of dealing with the container - there is one container instance in your application. You only ever need a single, root container instance of a container. In some rare advanced scenarios you may create "child" containers, but they are tied to, as children to the one single ubiquitous root application container.
+这也暗示了使用容器的一个非常重要的方面 - 在应用中有一个应用实例。你只需要一个单独的，容器的根容器实例。在一些非常罕见的高级场景，你可能会创建“子”容器，但是它们都与那个单一的无处不在的根容器栓在一起，作为子容器。
 
-Let's now have a look at what the three calls are.
+现在来看看都有哪三步。
 
-### Call one - bootstrapper
+### Call one - 引导程序（bootstrapper）
 
-Bootstrapper is the place where you create and configure your container. It usually is just a single method that looks somewhat like this:
+你在引导程序中创建和配置容器。它通常只是一个看起来有点像这样的方法：
 
 ```csharp
 public IWindsorContainer BootstrapContainer()
@@ -30,19 +30,19 @@ public IWindsorContainer BootstrapContainer()
 }
 ```
 
-In bootstrapper you do the following things:
+在引导程序你做这些事情：
 
-* Create the instance of the container that we'll be using.
-* Customise the container if needed. This is something you won't have to do most of the time (and that usually means never) since the default behavior and configuration of the container should suffice for 95% of applications. By customising, I mean replacing container's `HandlerFactory`, `ReleasePolicy`, `DependencyResolver`, subsystems. Things that container uses internally to perform its job. You may also want to add some extensions to the container here as well, for example [facilities](facilities.md) that need to be registered before any components.
-* Register all your [components](services-and-components.md) that the container will manage. That's the call to `Install` method you see in the code above. Here's where you pass your [installers](installers.md) which encapsulate all information about your specific component in the application. That's where the bulk of the work happens as you'll see later.
+* 创建将要使用的容器。
+* 需要的话自定义容器。 大多数时候你不会这样做 (通常是从不) ，因为容器的默认行为和配置应该能满足95％的应用程序。 通过自定义，我的意思是更换容器的 `HandlerFactory`, `ReleasePolicy`, `DependencyResolver`, 子系统。容器内部使用来完成其工作。你可能还需要一些扩展添加到容器，例如 需要在任何组件注册之前的[设施](facilities.md)。
+* 注册所有容器将要管理的所有[组件](services-and-components.md)。即上面代码中 `Install` 方法的调用。这里你传递 封装有关应用程序的特定组件的所有信息的[安装器](installers.md) 。这就是你将要看到的大部分工作。
 
-:information_source: **Prefer calling `Install` just once:** It is recommended to install all your installers in a single call to `Install`. While currently the container will work correctly even if call `Install` multiple times, or configure components outside of this method, Windsor is optimised for this scenario, and it performs better if you do it like this. In future versions it will be additionally optimised for usage of single `Install`.
+:information_source: **建议仅调用一次 `Install` :** 建议在`Install`的单个调用中安装所有安装器。虽然目前容器也能正常工作，即使多次调用`Install` ，或在这个方法以外配置组件。Windsor 对此进行了优化，但它会处理得更好。 在将来的版本中将会对单次 `Install` 调用进行额外的优化。
 
 ### Call two - `Resolve`
 
-In the first step we fully configure the container, and now we can actually use it. The important part is we use it just once (remember the *inversion of control* part). Every application has a root component. In a MonoRail or ASP.NET MVC application this would be your controller, in a Silverlight, WPF or WinForms application your main window, in WCF service your service, etc. You may have more than one root component, like in a console application where you'd have two - one for parsing command line parameters and second to perform some actual work, how ever there will always be very few of them and they will be the root of your component graph.
+在第一步，我们完成了配置容器，现在我们可以使用它了。最重要的是我们只使用它一次（记住 *IoC* 部分）。每个应用有一个根组件。在 MonoRail 或 ASP.NET MVC 应用中它是控制器，在Silverlight, WPF 或 WinForms应用中是主窗口，在WCF服务中是服务，等等。你可能会有多个根组件，比如在控制台应用中你可能有两个 - 一个用于解析命令行参数，另一个处理实际的工作。how ever there will always be very few of them and they will be the root of your component graph.
 
-Those are the only components you explicitly `Resolve` from the container. The container then constructs the entire graph of their dependencies and dependencies of their dependencies and so on, doing all sorts of work for you so that you can write code that's as simple as this:
+这些是你显式从容器`解析`的全部组件。容器然后构造它们的依赖和依赖的依赖等等的整个图，容器做了所有工作，因此就可以像下面这样简单的编写代码：
 
 ```csharp
 var container = BootstrapContainer();
@@ -50,9 +50,9 @@ var shell = container.Resolve<IShell>();
 shell.Display();
 ```
 
-:information_source: **Resolving by type vs resolving by name:** The `Resolve` method has several overloads that can be split into two groups - with name and without name. If name is not provided Windsor will use type to locate the service (as in the example above). If name is provided the name will be used and type will be used as a convenience for you (so that you don't have to cast from `object` or as a hint to the container, when you're resolving open generic component, how Windsor should close the open generic type). **Unless you have a good reason to resolve by name, use type.**
+:information_source: **通过类型解析 与 通过名称解析:**  `Resolve` 方法有一些重载，可以分为两组：使用名称和不使用名称。如果没有提供名称，Windsor 使用类型去定位服务（就像上面的例子）。 If name is provided the name will be used and type will be used as a convenience for you (so that you don't have to cast from `object` or as a hint to the container, when you're resolving open generic component, how Windsor should close the open generic type). **除非有足够的理由去使用名称解析，使用类型**
 
-By the time the second line of the code above finishes executing you will have a fully configured instance of your `IShell` service that you can then pass control to in the following line. If you're new to container's that should be the part that is really impressive. The container created entire complicated (containing potentially hundreds of objects, each configured differently) graph of objects for you, in a single line of code. This is profound, trust me.
+到上面代码的第二行执行完毕的时候，你将会拥有一个完全配置的`IShell`服务的实例，然后你可以在后面的代码中控制它了。如果你刚刚接触容器，那可能是真正令人印象深刻的。容器为你创建整个的复杂的对象图，在一行代码里面。这是深刻的，相信我。
 
 :information_source: **What about components I can't/don't want to obtain at root resolution time/place?** For cases where you need to pull some components from the container at some later point in time, not when resolving root component(s) use [typed factories](typed-factory-facility.md).
 
@@ -60,14 +60,14 @@ By the time the second line of the code above finishes executing you will have a
 
 ### Call three - `Dispose`
 
-That's the part that many people (especially those insisting that container does "dependency injection") forget about. Container manages entire lifetime of the components, and before we shutdown our application we need to shutdown the container, which will in turn decommission all the components it manages (for example Dispose them). That's why it is really important to call `container.Dispose()` before you close your application.
+这一步许多人（特别是那些坚持container does "dependency injection"）都忘记了。容器管理组件的整个生命期，并且在关闭应用之前我们需要关闭容器，这将反过来停用它管理的所有组件（比如回收它们）。这就是为什么在关闭应用之前调用`container.Dispose()`是如此重要。
 
-## Additional Resources
+## 其他资源
 
-* [Windsor Installers](installers.md)
-* [Fluent Registration API](fluent-registration-api.md)
-* [Typed Factory Facility](typed-factory-facility.md)
-* [Startable Facility](startable-facility.md)
-* [Lifecycle](lifecycle.md)
+* [Windsor 安装器](installers.md)
+* [Fluent 注册 API](fluent-registration-api.md)
+* [强类型工厂设施（Typed Factory Facility）](typed-factory-facility.md)
+* [可启动设施（Startable Facility）](startable-facility.md)
+* [生命周期](lifecycle.md)
 * [Extensibility Sample App - EventBrokerFacility](sample-eventbrokerfacility.md)
 * [Silvertlight Sample App Customers Contact Manager](sample-silverlight-customer-contact-manager.md)
