@@ -23,7 +23,7 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 :information_source: **分离安装器:** 通常一个单独的安装器安装相关服务的连续闭集（比如仓储，控制器，等等），每个集合都有一个独立的安装器。这会帮助你保持安装器简洁易读，使得它们在测试中更容易使用，更容易找到特定组件的相关注册代码 - 常常被遗忘但是良好分离注册代码的重要作用。
 
-:warning: **默认情况下安装器必须是公共的，并且有公共默认构造函数:** Windsor，在使用默认 `InstallerFactory` 时，**只扫描公共类型**，因此如果你的安装器不是公共的，Windsor 不会安装它们。 当安装器被 Windsor 实例时，它们必须有公共默认构造函数。否则会抛出异常。普通类也一样。
+:warning: **默认情况下安装器必须是公共的，并且有公共默认构造函数:** Windsor，在使用默认 `InstallerFactory` 时，**只扫描公共类型**，因此如果你的安装器不是公共的，Windsor 不会安装它们。 当安装器被 Windsor 实例化时，它们必须有公共默认构造函数。否则会抛出异常。普通类也一样。
 
 ## 使用安装器
 
@@ -69,7 +69,7 @@ container.Install(
 
 ### `Containing`
 
-从包含特定类型的程序集安装。这个方法通常作为 `FromAssembly.Named` 的string-less alternative (字符串替代？)。
+从包含特定类型的程序集安装。这个方法通常作为 `FromAssembly.Named` 的string-less替代。
 
 ### `InDirectory`
 
