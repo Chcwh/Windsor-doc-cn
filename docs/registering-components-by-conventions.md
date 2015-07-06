@@ -1,12 +1,12 @@
-# Registering components by conventions
+# 按照约定注册组件
 
-## Registering Multiple Types at once
+## 一次注册多个类型
 
-[Registering components one-by-one](registering-components-one-by-one.md) can be very repetitive job. Also remembering to register each new type you add can quickly lead to frustration. Fortunately, in majority of cases, you don't have to do it, nor should you. By using `Classes` or `Types` entry classes you can perform group registration of types based on some specified characteristics you specify. This is the way you will find using most often when writing applications with Windsor.
+[一个一个注册组件](registering-components-one-by-one.md) 是非常机械的工作。 同时要记住注册每个添加的新类型令人沮丧。幸运的是，在大多数情况下，你不需要，也不应该这样做。  通过使用 `Classes` 或 `Types` 入口类可以根据您指定的某些特定的特性进行组注册。你将发现这是使用 Windsor 编写应用程序时，使用得最多的方式。
 
-## Three steps
+## 三个步骤
 
-Registration of multiple types usually takes roughly the following form:
+通常使用下面的方式进行多个类型注册:
 
 ```csharp
 container.Register(Classes.FromThisAssembly()
@@ -15,41 +15,41 @@ container.Register(Classes.FromThisAssembly()
     .LifestyleTransient());
 ```
 
-You can identify three distinct steps in the registration call.
+你可以看到在注册调用中有三个不同的步骤。
 
-### Selecting assembly
+### 选择程序集
 
-First step is to point Windsor to the assembly (or assemblies) it should scan. You do it by using:
+第一步是为Windsor指出它可以扫描的程序集。你可以这样做:
 
 ```csharp
 Classes.FromThisAssembly()...
 ```
 
-or one of its sister methods.
+或者它的一个重载。
 
-:information_source: **Should I use `Classes` or `Types`?:** There are two ways to start registration by convention. One of them is using `Classes` static class, like in the example above. Second is using `Types` static class. They both expose exactly the same methods. The difference between them is, that `Types` will allow you to register all (or to be precise, if you use default settings, all public ) types from given assembly, that is classes, interfaces, structs, delegates, and enums. `Classes` on the other hand pre-filters the types to only consider non-abstract classes. Most of the time `Classes` is what you will use, but `Types` can be very useful in some advanced scenarios, like registration of [interface based typed factories](typed-factory-facility-interface-based.md).
+:information_source: **我应该使用 `Classes` 还是 `Types`？:** 有两种方式可以开始按约定注册. 一是使用 Classes 静态类，像上面的例子那样。二是使用 Types 静态类。它们都公开了相同的方法。它们之间的区别是， Types 允许你从给定的程序集注册所有 (准确的说，默认设置，所有公共) 类型，包括类，接口，结构体，委托和枚举。 Classes 会预先过滤类型，以便只考虑非抽象类。 你大多数时候应该使用 Classes , 但是 Types 在某些高级场景里非常有用，比如[基于接口的强类型工厂](typed-factory-facility-interface-based.md)的注册。
 
-:warning: **What about `AllTypes`?:** Both `Classes` and `Types` are new in Windsor 3. Previous versions had just one type to do the job - `AllTypes`. In Windsor 3, usage of `AllTypes` is discouraged, because its name is misleading. While it suggests that it behaves like `Types`, truth is it's exactly the same as `Classes`, pre-filtering all types to just non-abstract classes. To avoid confusion, use one of the two new types.
+:warning: ** `AllTypes` 呢？:** Both `Classes` 和 `Types` 都是在 Windsor 3 才有的. 以前的版本只有一个类做这项工作 - `AllTypes`。在 Windsor 3, 不建议使用 `AllTypes` 了, 因为它的名字有歧义。看起来它应该像 `Types`一样工作, 实际上它和 `Classes` 一样, 进行了预先过滤以便只有非抽象类. 为了避免混淆，我们使用了两个新的类型。
 
-### Selecting base type/condition
+### 基于类型/约定选择
 
-Once you selected an assembly you do first base step of filtering the types you want to register. This will narrow the scope of the objects in one of the following ways:
+一旦你选择了一个程序集你第一件事是过滤出你想要注册的类型。通过以下的方式之一，可以缩小对象的范围：
 
-1. By base type/implemented interface, for example:
+1. 通过基类/实现的接口，例如:
   * `Classes.FromThisAssembly().BasedOn<IMessage>()`
-1. By namespace, for example:
-  * :information_source: This method (and its overloads) are new in Windsor 3
+1. 通过命名空间, 例如:
+  * :information_source: T这个方法 (和它的重载) 在 Windsor 3 中加入
   * `Classes.FromAssemblyInDirectory(new AssemblyFilter("bin")).InNamespace("Acme.Crm.Extensions")`
-1. By any condtion, for example:
+1. 通过约定, 例如:
   * `Classes.FromAssemblyContaining<MyController>().Where( t=> Attribute.IsDefined(t, typeof(CacheAttribute)))`
-1. No restrictions at this point:
+1. 没有限制的方式:
   * `Classes.FromAssemblyNamed("Acme.Crm.Services").Pick()`
 
-### Additional filtering and configuration
+### 额外的过滤和配置
 
-Once you selected source for the types and base condition you can also configure the types or additionally filter some of them out. All the details of the API you can use at this point are discussed below.
+一旦你选择了源类型和基本条件，你还可以配置类型或额外过滤掉一部分。API的所有细节将在下面讨论。
 
-:warning: **`BasedOn`, `Where` and `Pick` do logical `or`:** Be wary when using more than one of `BasedOn`, `Where` and `Pick` at once. The following:
+:warning: **`BasedOn`, `Where` 和 `Pick` 进行逻辑 `或` 运算:** 在多次使用 `BasedOn`, `Where` 和 `Pick` 时，应谨慎一些. 如下所示:
 
 ```csharp
 container.Register(
@@ -60,11 +60,11 @@ container.Register(
 );
 ```
 
-Will register all messages **and also** all message handlers **and also** all message DTOs. This is usually not the behavior you want, and to avoid confusion in Windsor 3 this call chaining will give you a compiler warning. Be explicit and register those three sets of components in three separate calls.
+将会注册所有 messages 与 所有 message handlers 与 所有 message DTOs。这通常不是你想要的行为，为了避免混淆，在 Windsor 3 中此调用链将会给你编译警告. 应在3个独立的调用中注册这3个组件集合。
 
-#### Registering all descendants of given type (for example all controllers in MVC application)
+#### 注册给定类型的所有派生类 (例如 MVC 应用中的所有控制器)
 
-Here's an example from a Monorail configuration:
+这里有一个 Monorail 配置示例:
 
 ```csharp
 container.Register(
@@ -74,27 +74,27 @@ container.Register(
 );
 ```
 
-We are registering all types which implement `SmartDispatcherController` from the executing assembly. This is a quick way of adding all your controllers to the container. It will also automatically register all new controllers as you add them to your application.
+我们从执行中的程序集中注册了所有实现了 `SmartDispatcherController` 的类型，这是注册你的所有控制器的快捷方式。 当你在应用中添加新控制器时，将会自动注册。
 
-#### Default Service
+#### 默认服务
 
-Keep in mind that `Of` as well as `Pick` and other filtering methods only narrow down the set of types we want to register. **They do not specify the service that these types provide** and unless you specify one the default will be used, that is the implementation type itself. In other words, the above registration will register all types inheriting from `SmartDispatcherController` with service being their own type, not the `SmartDispatcherController` so trying to call
+请记住 `Of` 和 `Pick` 以及其他过滤方法一样都只会缩小我们想要注册的类型集合。 **They do not specify the service that these types provide** and unless you specify one the default will be used, that is the implementation type itself. 换句话说，上面的注册将会注册所有派生自 `SmartDispatcherController` 的类型作为它们自身类型的服务, 而不是 `SmartDispatcherController`， 因此这样调用的话：
 
 ```csharp
 var controller = container.Resolve<SmartDispatcherController>();
 ```
 
-will throw an exception.
+将会抛出异常。
 
-In this default case types may be requested only by their implementation type (the default service).
+这个例子中，类型只能通过它们的实现类型请求(默认服务)。
 
 ```csharp
 var controller = container.Resolve<MyHomeController>();
 ```
 
-## Selecting service for the component
+## 为组件选择服务
 
-By default the service of the component is the type itself. There are several situations in which this is not sufficient. Windsor lets you specify the service type explicitly.
+默认情况下，组件的服务是它们自身。有时这还不够。Windsor 允许你显式指定服务。
 
 ### `Base()`
 
@@ -107,13 +107,13 @@ container.Register(
 );
 ```
 
-Here we register all types implementing closed version of `ICommand<>` and `IValidator<>`, respectively (Now, read it again, slowly). To give you an example - when we request `ICommand<AddCustomer>` we'll receive an instance of type implementing `ICommand<AddCustomer>`, most likely named something like `AddCustomerCommand`.
+这里我们注册所有实现 ICommand<> 和 IValidator<> 相应版本的类型，分别的 (现在，再读一遍，慢慢的)。举个例子 - 当我们调用 ICommand<AddCustomer> 时， 我们将会获得一个实现了 ICommand<AddCustomer> 的实例， most likely named something like `AddCustomerCommand`。
 
-The most important aspect of this specification, and often most confusing, is the presence of the `WithService.Base()`. This tells the registration strategy to choose the closed version of the interface specification as the service type. In this case, something like `IValidator<Customer>` might be selected. Without it, the type would be registered against the open version of the interface and you would most likely not get the desired resolution capability.
+这个约定最重要的概念, 也是最容易混淆的, 是 `WithService.Base()` 的存在。 这告诉注册策略选择接口规范的最近版本作为服务类型。在这个例子中，将会选择类似  `IValidator<Customer>` 的。没有这个，类型将会被注册为接口的开放版本，并且你可能不会获得需要的解析精确度。（待定）
 
 ### `DefaultInterfaces()`
 
-:information_source: This method was renamed in Windsor 3 from `DefaultInterface` to emphasize the fact that it can match more than just one service for a component.
+:information_source: `DefaultInterface` 在 Windsor 3 被改成了这个名字，以 表明它可以为一个组件匹配多个服务
 
 ```csharp
 container.Register(
@@ -123,11 +123,11 @@ container.Register(
 );
 ```
 
-This method performs matching based on type name and interface's name. Often you'll find that you have interface/implementation pairs like this: `ICustomerRepository`/`CustomerRepository`, `IMessageSender`/`SmsMessageSender`, `INotificationService`/`DefaultNotificationService`. This is scenario where you might want to use `DefaultInterfaces` method to match your services. It will look at all the interfaces implemented by selected types, and use as type's services these that have matching names. Matching names, means that the implementing class contains in its name the name of the interface (without the *I* on the front).
+这个方法根据类型名称和接口名称进行匹配。通常你的接口和实现成对出现，就像这样: `ICustomerRepository`/`CustomerRepository`, `IMessageSender`/`SmsMessageSender`, `INotificationService`/`DefaultNotificationService`。这种情况下你可能希望使用 `DefaultInterfaces` 方法来匹配你的服务。 它将会检查选定类型的实现的所有接口，并将那些名称匹配的接口作为类型的服务。名称匹配，意味着实现类的名称包含接口的名称 (没有前面的 `I`)。
 
 ### `FromInterface()`
 
-Another very common scenario is having the ability to register all types that share a common interface, but are otherwise unrelated.
+另一种常见的情况是需要注册实现了某接口的所有类型， but are otherwise unrelated.
 
 ```csharp
 container.Register(
@@ -136,9 +136,9 @@ container.Register(
 );
 ```
 
-Here we register service classes from the executing assembly.  In this case, the `IService` interface might be a marker interface identifying the role of a component in the system.  Unlike `WithService.Base()`, the service type selected for this registration is chosen from the interface that extended `IService`.  The following is an example to help illustrate this.
+这里我们从执行程序集注册服务类。在这个例子中,  `IService` 接口可能是一个指定组件在系统中的角色的标记接口。不像 `WithService.Base()`, 这个注册选择的服务类型是扩展了 `IService` 接口的类型。下面是一个例子帮助说明这一点。
 
-Lets say you have a marker interface `IService` to designate all services in your assembly.
+比方说你有一个标记接口 `IService` 标记您程序集的所有服务。
 
 ```csharp
 public interface IService {}
@@ -157,7 +157,7 @@ public class CalculatorService : ICalculatorService
 }
 ```
 
-The above registration would be equivalent to
+上面的注册等同于
 
 ```
 container.Register(
@@ -165,21 +165,21 @@ container.Register(
 );
 ```
 
-As you can see, the actual service interface is NOT `IService`, but rather the interface extending `IService`, which is `ICalculatorService` in this case.
+正如你所看到的，实际的服务接口不是 `IService`，而是派生自 `IService` 的接口, 这里是 `ICalculatorService`。
 
 ### `AllInterfaces()`
 
-When a component implements multiple interfaces and you want to use it as a service for all of them, use `WithService.AllInterfaces()` method.
+当一个组件实现多个接口并且你想将其作为这些接口的服务，使用 `WithService.AllInterfaces()` 方法。
 
 ### `Self()`
 
-To register the component implementation type explicitly as a service use `WithService.Self()`
+要明确注册该组件实现类型作为服务，使用 `WithService.Self()`。
 
 ### `Select()`
 
-If none of the above options suits you you can provide your own selection logic as a delegate and pass it to `WithService.Select()` method.
+如果上面的办法都不适合你，你可以提供自己的选择逻辑作为委托，并将其传递给 `WithService.Select()` 方法。
 
-:information_source: **Services are cumulative:** Multiple calls to `WithService.Something()` are allowed and they are cumulative. That means that if you call:
+:information_source: **服务是累计的:** 多次调用 `WithService.Something()` 是允许的，这样它们就是累计的。意思是如果你这样调用:
 
 ```csharp
 Classes.FromThisAssembly()
@@ -188,15 +188,15 @@ Classes.FromThisAssembly()
    .WithService.Base()
 ```
 
-the types matched will be registered as both IFoo, and themselves. In other words the above would be equivalent to doing the following for each type implementing `IFoo`
+匹配的类型将会注册为 IFoo，和它们自身。  换句话说上面的用法与对每个实现了 `IFoo` 的类型调用如下方法是等价的
 
 ```csharp
 Component.For<IFoo, FooImpl>().ImplementedBy<FooImpl>();
 ```
 
-### Registering non-public types
+### 注册非公开类型
 
-By default only types visible from outside of the assembly will be registered. If you want to include non-public types, you have to start with specifying assembly first, and then call `IncludeNonPublicTypes`
+默认情况下只有在程序集外面能够访问的方法会被注册。如果你需要包括非公开类型，你需要首先指定程序集，然后调用 `IncludeNonPublicTypes` 方法
 
 ```csharp
 container.Register(
@@ -206,11 +206,11 @@ container.Register(
 );
 ```
 
-:warning: **Don't expose non-public types:** It is rarely a good idea to expose via container types that wouldn't be available otherwise. Usually they are not public for a reason. Think twice before using this option.
+:warning: **不要暴露非公开类型:** 通过容器暴露那些不可用类型不是一个好主意。通常它们因为某些原因不公开。在使用该选项时请三思。
 
-### Configuring registration
+### 配置注册
 
-When you register your types you can also configure them to set all the same properties as when registering types one by one. For this, you use configure method. The most common case is to assign a lifestyle to your components other than the default Singleton.
+当你注册多个组件时，你可能会为每个组件的相同属性设置值。对此，你使用Configure()方法。最常见的例子是设置组件的生命期模式（lifestyle），而不是使用默认的单例模式。
 
 ```csharp
 container.Register(
@@ -220,9 +220,9 @@ container.Register(
 );
 ```
 
-This scenario is so common that Windsor 3 provides a shortcut to it
+这种用法是如此常见以至于 Windsor 3 为它提供了简易方式。
 
-:information_source: Below method and its sister methods are new in Windsor 3
+:information_source: 下面的方法和它的重载是 Windsor 3 新增的
 
 ```csharp
 container.Register(
@@ -232,7 +232,7 @@ container.Register(
 );
 ```
 
-In addition to (or instead of) specifying the lifestyle you can set many other configuration options:
+除了指定生命期类型，你可以设置其他的配置选项:
 
 ```csharp
 container.Register(
@@ -243,9 +243,9 @@ container.Register(
 );
 ```
 
-In here we register classes implementing `ICommon`, set their lifestyle and name.
+在这里我们注册实现了 `ICommon` 的类, 并设置它们的生命期模式和名称。
 
-You can do also a more fine grained configuration, setting some additional properties for a subset of your components:
+你可以做一些更细的配置，为你的组件的子集设置一些其他属性：
 
 ```csharp
 container.Register(
@@ -264,6 +264,6 @@ container.Register(
 );
 ```
 
-In here, we do the same thing as above, but in addition for types implementing two other interfaces we set additional inline dependencies.
+在这里, 我们做了和上面一样的事情, 但是对两个实现了其他接口的类型设置了额外的内联依赖。
 
 :information_source: See the "Conditional component registration" section below for a discussion on better filtering the types you register.
