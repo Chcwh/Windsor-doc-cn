@@ -1,12 +1,12 @@
-# Windsor Installers
+# Windsor 安装器（Installers）
 
-## Introduction
+## 简介
 
-When working with the container, [the first thing you need to do](three-calls-pattern.md#call-one-bootstrapper) is to register all your [components](services-and-components.md). Windsor uses installers (that is types implementing `IWindsorInstaller` interface) to encapsulate and partition your registration logic, as well as some helper types like `Configuration` and `FromAssembly` to make working with installers a breeze.
+当使用容器工作时， [需要做的第一件事](three-calls-pattern.md#call-one-bootstrapper) 是注册所有 [组件](services-and-components.md)。 Windsor 使用安装器 (实现 `IWindsorInstaller` 接口的类型) 封装和分离你的注册逻辑，一些帮助类，比如 `Configuration` 和 `FromAssembly` 使得安装工作轻而易举。
 
-## `IWindsorInstaller` interface
+## `IWindsorInstaller` 接口
 
-Installers are simply types that implement the `IWindsorInstaller` interface. The interface has a single method called `Install`. The method gets an instance of the container, which it can then register components with using [fluent registration API](fluent-registration-api.md):
+安装器是实现了 `IWindsorInstaller` 接口的简单类型。 该接口只有一个 `Install` 方法。该方法获得容器的实例，然后就可以使用[Fluent 注册 API](fluent-registration-api.md)注册组件：
 
 ```csharp
 public class RepositoriesInstaller : IWindsorInstaller
@@ -21,13 +21,13 @@ public class RepositoriesInstaller : IWindsorInstaller
 }
 ```
 
-:information_source: **Partition your installers:** Usually single installer installs some coherent closed set of related services (like repositories, controllers, etc), and you have separate installer for each of these sets. This helps you keep your installers small and readable, makes it easier to use them in tests and in longer run makes it easier to locate the code that is responsible for registration of any particular component - often overlooked but important effect of well partitioned registration code.
+:information_source: **分离安装器:** 通常一个单独的安装器安装相关服务的连续闭集（比如仓储，控制器，等等），每个集合都有一个独立的安装器。这会帮助你保持安装器简洁易读，使得它们在测试中更容易使用，更容易找到特定组件的相关注册代码 - 常常被遗忘但是良好分离注册代码的重要作用。
 
-:warning: **By default Installers must be public with public default constructor:** Windsor, when using the default `InstallerFactory` **scan only for public types**, so if your installers aren't public Windsor will not install them. When installers are instantiated by Windsor, they must have public default constructor. Otherwise an exception will be thrown. This is true also about the normal classes.
+:warning: **默认情况下安装器必须是公共的，并且有公共默认构造函数:** Windsor，在使用默认 `InstallerFactory` 时，**只扫描公共类型**，因此如果你的安装器不是公共的，Windsor 不会安装它们。 当安装器被 Windsor 实例时，它们必须有公共默认构造函数。否则会抛出异常。普通类也一样。
 
-## Using installers
+## 使用安装器
 
-After you create your installers, you have to install them to the container in your [bootstrapper](three-calls-pattern.md#call-one-bootstrapper). To do this, you use `Install` method on the container:
+在创建安装器之后，你必须在[启动程序](three-calls-pattern.md#call-one-bootstrapper)中将它们安装到容器。为此，使用容器的 `Install` 方法：
 
 ```csharp
 var container = new WindsorContainer();
@@ -38,15 +38,15 @@ container.Install(
 );
 ```
 
-This can be a little tedious, as you will most likely have several or more installers in your app. Also each time you add a new one, you have to remember to come back to your bootstrapper and install it.
+这可能有一点乏味，因为你的应用很可能有几个或更多的安装器。另外每次添加了一个新的安装器，你都需要记得回到启动程序来安装它。
 
-To take this tedious manual process away Windsor has some helpers that will automatically take care of that, namely `FromAssembly` static class, and `Configuration` class for using external configuration.
+为了远离这些乏味的手工工作，Windsor 有些自动处理这些的帮助类，也就是 `FromAssembly` 静态类， 和为了使用外部配置的 `Configuration` 类。
 
-## `FromAssembly` class
+## `FromAssembly` 类
 
-Instead of instantiating installers manually you can leave this up to Windsor by using `FromAssembly` class. The class has some methods that select one or more assemblies, and it will then instantiate and install all installer types from that assembly or those assemblies for you. This has the benefit that as you add new installers to these assemblies, they'll be automatically picked up by Windsor, with no additional work from your side.
+与其手工实例化安装器，你可以通过使用 `FromAssembly` 类，将事情留给 Windsor 完成。这个类有一些选择一个或多个程序集的方法，然后它会实例化那些程序集中的所有安装器类型。这样做的好处是，当你为这些程序集添加新的安装器时，它们会被 Windsor 自动选中，你不需要做额外的工作。
 
-The type exposes few useful methods for locating the assembly.
+这个类型公开了几个有用的方法用于定位程序集。
 
 ```csharp
 container.Install(
@@ -57,35 +57,35 @@ container.Install(
    FromAssembly.Instance(this.GetPluginAssembly()));
 ```
 
-:information_source: **Installers are created/installed in non-deterministic order:** When using `FromAssembly` you should not rely on the order in which your installers will be instantiated/installed. It is non-deterministic which means you never know what it's going to be. If you need to install the installers in some specific order, use `InstallerFactory`.
+:information_source: **安装器以不确定的顺序创建和安装:** 在使用 `FromAssembly` 时，你不应该依赖安装器将会被实例化或安装的顺序。它是不确定的，意味着你不会知道执行的顺序。如果你需要以指定顺序安装安装器，使用 `InstallerFactory`。
 
 ### `This`
 
-Install from assembly calling the method. That is your bootstrapping assembly.
+从调用方法的程序集安装。即你的启动程序集。
 
 ### `Named`
 
-Install from assembly with specified assembly name using standard .NET assembly locating mechanism. You can also provide path to a .dll or .exe file when you have the assembly in some non-standard location.
+通过指定程序集名称安装，使用标准.NET程序集定位机制。你也可以提供 .dll 或 .exe 文件的路径，当你的程序集在非标准位置时。
 
 ### `Containing`
 
-Installs from assembly containing designated type. This method is usually used as string-less alternative to `FromAssembly.Named`.
+从包含特定类型的程序集安装。这个方法通常作为 `FromAssembly.Named` 的string-less alternative (字符串替代？)。
 
 ### `InDirectory`
 
-Installs from assemblies located in given directory. This method takes an `AssemblyFilter` object which lets you do all sorts of filtering to narrow down the set of assemblies you're interested in, including filtering by assembly name pattern, public key token or custom predicates.
+从指定文件夹安装。该方法需要一个 `AssemblyFilter` 对象，这个对象允许你做各种过滤，以缩小你感兴趣的程序集的范围，包括通过名称模式过滤，公钥标记或自定义过滤。
 
 ### `Instance`
 
-Installs from given arbitrary assembly. Use this method as fallback for the other ones, when you have some custom code locating the assembly you want to install.
+从任意指定程序集安装。这个方法时是其他方法的后备，当你有一些定位你想安装的程序集的自定义代码时。
 
-## `InstallerFactory` class
+## `InstallerFactory` 类
 
-All of the above methods have an overload that takes an `InstallerFactory` instance. Most of the time you won't care about it and things will just work. However if you need to have tighter control over installers from the assembly (influence order in which they are installed, change how they're instantiated or install just some, not all of them) you can inherit from this class and provide your own implementation to accomplish these goals.
+上面所有的方法都有一个接收 `InstallerFactory` 实例的重载。大多数时候你不需要关心，things will just work。但是，如果你需要更严格的控制程序集的安装器（影响安装的顺序，改变实例化方式或只安装一部分，而不是全部），你可以从这个类派生，并提供你自己的实现去实现这些目标。
 
-## `Configuration` class
+## `Configuration` 类
 
-In addition to your own installers that register components in code using [Windsor.Fluent-Registration-API|fluent registration API], you may have some [Windsor.XML-Registration-Reference|XML configuration]. You can install it via methods exposed on static `Configuration` class.
+除了在代码中使用 [Windsor.Fluent-Registration-API|fluent registration API] 注册组件的安装器外，你可能有一些 [Windsor.XML-Registration-Reference|XML configuration]。你可以通过静态类 `Configuration` 公开的方法来安装。
 
 ```csharp
 container.Install(
@@ -95,16 +95,17 @@ container.Install(
 );
 ```
 
-You can use it to access configuration in AppDomain configuration file (`app.config`, or `web.config`) or any arbitrary XML file. As shown in the last example the file may be embedded within an assembly (build action set to Embedded Resource).
 
-One useful usage of the `Configuration` class is to use XML configuration file to remove compile-time dependency on some additional assemblies that may, for example, be themselves extensions to your application. You can list these assemblies (or specific installers types contained in them) in the XML file, and have Windsor pick them up and install for you. [Windsor.Registering-Installers|Read more here].
+你可以用它来访问AppDomain配置文件（的app.config或web.config文件）中的配置，或任意的XML文件。如本文最后一个例子所示，文件可以是嵌入到程序集中的（编译操作设置为嵌入的资源）。
 
-## See also
+`Configuration` 类的一个非常有用的用法，是使用XML配置文件消除一些额外组件（比如说你的应用的扩展）的编译时依赖。 你可以将这些程序集（或包含在它们内的特定安装器）在XML文件中列出，并让 Windsor 查找和安装它们。[Windsor.Registering-Installers|Read more here].
 
-* [Fluent registration API](fluent-registration-api.md)
-* [XML configuration reference](xml-registration-reference.md)
-* [Registering installers via XML configuration](registering-installers.md)
+## 还可以看看
 
-## External resources
+* [Fluent 注册 API](fluent-registration-api.md)
+* [XML 配置引用](xml-registration-reference.md)
+* [通过 XML 配置注册安装器](registering-installers.md)
+
+## 外部资源
 
 * [Blog post by Krzysztof Kozmic (Oct 10, 2010)](http://kozmic.pl/2010/08/10/ioc-patterns-ndash-partitioning-registration/)
