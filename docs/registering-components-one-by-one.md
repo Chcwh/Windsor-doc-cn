@@ -1,14 +1,14 @@
-# Registering components one-by-one
+# 一个一个注册组件
 
-## Basic Registration Examples
+## 基础注册示例
 
-The starting point for registering anything in the container is the container's `Register` method, with has one or more `IRegistration` objects as parameter. The simplest way to create those objects is using the static `Castle.MicroKernel.Registration.Component` class. Its `For` method returns a `ComponentRegistration` that you can use to further configure the registration.
+在容器中注册任何东西的起点是容器的 `Register` 方法，使用一个或多个 `IRegistration` 对象作为参数。创建那些对象最简单的方式是使用静态类 `Castle.MicroKernel.Registration.Component` 。它的 `For` 方法返回 `ComponentRegistration`，可以用于配置组件注册。
 
-:information_source: **Isolate your registration code:** It is a recommended practice to keep your registration code in a dedicated class(es) implementing [`IWindsorInstaller`](installers.md).
+:information_source: **分离你的注册代码:** 分离你的注册代码到实现 [`IWindsorInstaller`](installers.md) 的独立类是一个推荐实践。
 
-:information_source: **Install infrastructure components first:** Some components may require a facility or other extension to the core container to be registered properly. As such it is recommended that you always register your [facilities, custom subsystems, Component model creation contributors etc](extension-points.md) before you start registering your components.
+:information_source: **先安装框架组件:** 一些组件可能需要设施或其他容器核心的扩展正确的注册。因此推荐你总是在注册你的组件之前，先注册[设施，自定义子系统，组件模型构造支持器等等](extension-points.md) 。
 
-## To register a type in the container
+## 在容器中注册类型
 
 ```csharp
 container.Register(
@@ -16,9 +16,9 @@ container.Register(
 );
 ```
 
-This will register type `MyServiceImpl` as service `MyServiceImpl` with default lifestyle (Singleton).
+这将会注册类型 `MyServiceImpl` 作为服务 `MyServiceImpl` ，使用默认生命期类型 (Singleton).
 
-## To register a type as non-default service
+## 注册类型为非默认服务
 
 ```csharp
 container.Register(
@@ -27,7 +27,7 @@ container.Register(
 );
 ```
 
-Note that `For` and `ImplementedBy` also have non-generic overloads.
+注意 `For` 和 `ImplementedBy` 也有泛型重载。
 
 ```csharp
 // Same result as example above.
@@ -37,13 +37,13 @@ container.Register(
 );
 ```
 
-:information_source: **Services and Components:** You can find more information about services and components [here](services-and-components.md).
+:information_source: **服务和组件:** 你可以在 [这里] 找到更多关于服务和组件的信息(services-and-components.md)。
 
-## To register a generic type
+## 注册泛型
 
-Suppose you have a `IRepository<TEntity>` interface, with `NHRepository<TEntity>` as the implementation.
+加入你有一个 `IRepository<TEntity>` 接口， `NHRepository<TEntity>` 是它的实现。
 
-You could register a repository for each entity class, but this is not needed.
+你可以为每一个实体类注册仓储，但这是不必要的。
 
 ```csharp
 // Registering a repository for each entity is not needed.
@@ -56,7 +56,7 @@ container.Register(
 );
 ```
 
-One `IRepository<>` (so called open generic type) registration, without specifying the entity, is enough.
+一个 `IRepository<>` (也叫开放泛型类) 注册，不需要指定实体，就够了。
 
 ```csharp
 // Does not work (compiler won't allow it):
@@ -66,7 +66,7 @@ container.Register(
 );
 ```
 
-Doing it like this however is not legal, and the above code would not compile. Instead you have to use `typeof()`
+这样做是非法的，上面的代码不能编译。你必须使用 `typeof()`
 
 ```csharp
 // Use typeof() and do not specify the entity:
@@ -76,7 +76,7 @@ container.Register(
 );
 ```
 
-## Configuring component's lifestyle
+## 配置组件的生命期方式
 
 ```csharp
 container.Register(
@@ -86,11 +86,11 @@ container.Register(
 );
 ```
 
-When the [lifestyle](lifestyles.md) is not set explicitly, the default Singleton lifestyle will be used.
+如果没有显式的指定 [生命期类型](lifestyles.md) ，将会使用默认的 Singleton 生命期类型。
 
-## Register more components for the same service
+## 为服务注册多个组件
 
-You can do this simply by having more registrations for the same service.
+你可以为同一个服务使用多次注册来实现。
 
 ```csharp
 container.Register(
@@ -99,11 +99,11 @@ container.Register(
 );
 ```
 
-When a component has a dependency on `IMyService`, it will by default get the `IMyService` that was registered first (in this case `MyServiceImpl`).
+当一个组件有一个 `IMyService` 依赖，它将会默认获得第一个注册的 `IMyService` （这里是 `MyServiceImpl`）。
 
-:information_source: **In Windsor first one wins:** In Castle, the default implementation for a service is the first registered implementation. This is different from AutoFac for example, where the default is the last registered implementation ([http://code.google.com/p/autofac/wiki/ComponentCreation](http://code.google.com/p/autofac/wiki/ComponentCreation)).
+:information_source: **在 Windsor 里面第一个胜利:** 在 Castle 里面，服务的默认实现是第一个注册的实现。这与 AutoFac 不同，AutoFac 的默认实现是最后一个注册的 ([http://code.google.com/p/autofac/wiki/ComponentCreation](http://code.google.com/p/autofac/wiki/ComponentCreation))。
 
-You can force the later-registered component to become the default instance via the method `IsDefault`.
+你可以通过 `IsDefault` 方法强制后面注册的组件成为默认组件。
 
 ```csharp
 container.Register(
@@ -112,17 +112,17 @@ container.Register(
 );
 ```
 
-In the above example, any component that has a dependency on `IMyService`, will by default get an instance of `OtherServiceImpl`, even though it was registered later.
+在上面的例子中，任何拥有 `IMyService` 依赖的组件，都会默认获得 `OtherServiceImpl` 的实例，即时它是后面注册的。
 
 Of course, you can override which implementation is used by a component that needs it. This is done with service overrides.
 
-When you explicitly call `container.Resolve<IMyService>()` (without specifying the name), the container will also return the first registered component for `IMyService` (`MyServiceImpl` in the above example).
+当你显式调用 `container.Resolve<IMyService>()` （不指定名称）时，容器也会返回为 `IMyService` 注册的第一个组件(上面的例子中是 `MyServiceImpl`)。
 
-:information_source: **Provide unique names for duplicated components:** If you want to register the same implementation more than once, be sure to provide different names for the registered components.
+:information_source: **为duplicated组件提供唯一名称:** 如果你想多次注册同一个实现，确保为注册的组件提供不同的名称。
 
-## Register existing instance
+## 注册存在的实例
 
-It is possible to register an existing object as a service.
+可以将存在的对象注册为服务。
 
 ```csharp
 var customer = new CustomerImpl();
@@ -131,11 +131,11 @@ container.Register(
 );
 ```
 
-:warning: **Registering instance ignores lifestyle:** When you register an existing instance, even if you specify a lifestyle it will be ignored. Also registering instance, will set the implementation type for you, so if you try to do it manually, an exception will be thrown.
+:warning: **注册实例无视生命期类型:** 当你注册一个已存在的实例，即时你指定了生命期类型，也会忽略。Also registering instance, will set the implementation type for you, so if you try to do it manually, an exception will be thrown.
 
-## Using a delegate as component factory
+## 使用委托作为组件工厂
 
-You can use a delegate as a lightweight factory for a component:
+你可以使用委托作为组件的轻量工厂：
 
 ```csharp
 container
@@ -146,9 +146,9 @@ container
 );
 ```
 
-`UsingFactoryMethod` method has two more overloads, which can provide you with access to kernel, and creation context if needed.
+`UsingFactoryMethod` 方法还有两个重载，可以让你访问核心（kernel）和构造上下文，如果需要的话。
 
-Example of `UsingFactoryMethod` with kernel overload (Converter<IKernel, IMyService>)
+`UsingFactoryMethod` 使用核心重载的例子 (Converter<IKernel, IMyService>)
 
 ```csharp
 container.Register(
@@ -158,7 +158,7 @@ container.Register(
 );
 ```
 
-In addition to `UsingFactoryMethod` method, there's a `UsingFactory` method. (without the "method" suffix :-) ). It can be regarded as a special version of `UsingFactoryMethod` method, which resolves an existing factory from the container, and lets you use it to create instance of your service.
+`UsingFactoryMethod` 方法之外，还有一个 `UsingFactory` 方法。(没有 "method" 后缀 :-) )。可以看做 `UsingFactoryMethod` 方法的特殊版本，从容器中解析一个存在的工厂，并且让你使用它创建服务的实例。
 
 ```csharp
 container.Register(
@@ -169,11 +169,11 @@ container.Register(
 );
 ```
 
-:warning: **Avoid UsingFactory:** It is advised to use `UsingFactoryMethod`, and to avoid `UsingFactory` when creating your services via factories. `UsingFactory` will be obsoleted/removed in future releases.
+:warning: **避免 UsingFactory:** 建议使用 `UsingFactoryMethod`，避免使用 `UsingFactory` 当你通过工厂创建服务时。`UsingFactory` 将是 obsoleted/removed 在未来的版本。
 
 ## OnCreate
 
-It is sometimes needed to either inspect or modify created instance, before it is used. You can use `OnCreate` method to do this
+有时需要检查或修改创建的实例，在它被使用之前。你可以使用 `OnCreate` 方法来做这件事。
 
 ```csharp
 container.Register(
@@ -183,13 +183,13 @@ container.Register(
 );
 ```
 
-The method has two overloads. One that works with a delegate to which an `IKernel` and newly created instance are passed. Another only takes the newly created instance.
+这个方法有两个重载。一个方法的参数是接收一个 `IKernel` 和新创建实例作为参数的委托，另一个只有新创建的实例。
 
-:information_source: **`OnCreate` works only for components created by the container:** This method is not called for components where instance is provided externally (like when using Instance method). It is called only for components created by the container. This also includes components created via certain facilities ([Remoting Facility](remoting-facility.md), [Factory Support Facility](factory-support-facility.md))
+:information_source: **`OnCreate` 只对容器创建的组件有效:** This method is not called for components where instance is provided externally (like when using Instance method). It is called only for components created by the container. This also includes components created via certain facilities ([Remoting Facility](remoting-facility.md), [Factory Support Facility](factory-support-facility.md))
 
-## To specify a name for the component
+## 为组件指定名称
 
-The default name for a registered component is the full type name of the implementing type. You can specify a different name using the Named() method.
+注册的组件的默认名称是实现类的全名。你可以使用 Named() 方法指定一个不同的名称。 
 
 ```csharp
 container.Register(
@@ -199,9 +199,10 @@ container.Register(
 );
 ```
 
-## Supplying the component for a dependency to use (Service override)
+## 使用 (Service override) 为组件提供依赖
 
-If a component needs or wants an other component to function, this is called a dependency. When registering, you can explicitly set which component to use using service overrides.
+如果一个组件需要或想要其他组件，这叫做依赖。当注册的时候，使用Service override可以显式设置要使用的组件。
+If a component needs or wants an other component to function, this is called a dependency. 
 
 ```csharp
 container.Register(
@@ -226,13 +227,13 @@ public class ProductController
 }
 ```
 
-## Registering component with multiple services
+## 为复数服务注册组件
 
-It is possible to use single component for more than one service. For example if you have a class `FooBar` which implements both `IFoo` and `IBar` interfaces, you can configure your container, to return the same service when `IFoo` and `IBar` are requested. This ability is called type forwarding.
+可以将单个组件用作多个服务。比如你有一个类 `FooBar`，实现了 `IFoo` 和 `IBar` 接口。你可以配置容器，在 `IFoo` 和 `IBar` 被请求时，返回同一个服务。该功能被称为 type forwarding。
 
 ## Type forwarding
 
-The easiest way to specify [type forwarding](forwarded-types.md) is to use multi-generic-parameter overload of `Component.For` method
+指定[type forwarding](forwarded-types.md)最简单的办法是使用 `Component.For` 方法的多泛型参数重载。
 
 ```csharp
 container.Register(
@@ -241,11 +242,11 @@ container.Register(
 );
 ```
 
-There are overloads for up to four forwarded services, which should always be enough. If you find yourself needing more you most likely are violating Single Responsibility Principle, and you might want to break your giant component into more, each doing just one thing.
+There are overloads for up to four forwarded services, which should always be enough. 如果你发现你需要更多，你很可能违反了单一职责原则（SRP）。你可能需要将你的巨大的组件拆分为多个，每个只做一件事情。
 
-There's also a non-generic overload, which takes either `IEnumerable<Type>` or `params Type[]`, in case you need open generics support or can't use generic version for whatever reason.
+还有一个非泛型重载，需要 `IEnumerable<Type>` 或 `params Type[]` 参数。在你需要开放泛型（open generics）支持或因为各种原因不能使用泛型版本时使用。
 
-Moreover, you can use `Forward` method, which exposes identical behavior and overloads as `For` method.
+此外，你可以使用 `Forward` 方法，它为 `For` 方法公开了相同的行为和重载。
 
 ```csharp
 container.Register(
@@ -255,11 +256,11 @@ container.Register(
 );
 ```
 
-## Supplying inline dependencies
+## 提供内联依赖
 
-Not everything has to be a component in Windsor. Some components require parameters, like connection strings, buffer size etc. You can provide these parameters as [inline dependencies](inline-dependencies.md).
+不是所有的东西都必须是 Windsor 的组件。有些组件需要的参数，如连接字符串，缓冲区大小等等。你可以提供这些参数为[内联依赖](inline-dependencies.md)。
 
-## See also
+## 还可以看看
 
-* [Conditional component registration](conditional-component-registration.md)
-* [Registering components by conventions](registering-components-by-conventions.md)
+* [条件组件注册](conditional-component-registration.md)
+* [通过约定注册组件](registering-components-by-conventions.md)
