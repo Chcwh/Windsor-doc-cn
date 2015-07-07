@@ -30,7 +30,7 @@ king.RuleTheCastle();
 container.Dispose();
 ```
 
-那些 [（未翻译）installers](installers.md) 是什么？ 这里有一个。
+那些 [安装器（installers）](installers.md) 是什么？ 这里有一个。
 
 ```csharp
 public class RepositoriesInstaller : IWindsorInstaller
@@ -67,8 +67,8 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 ### 使用容器
 
-* [（未翻译）使用容器 - 如何使用、在哪里使用](three-calls-pattern.md)
-* [（未翻译）Windsor installers - 怎样把你的组件告诉 Windsor](installers.md)
+* [使用容器 - 如何使用、在哪里使用](three-calls-pattern.md)
+* [Windsor 安装器 - 怎样把你的组件告诉 Windsor](installers.md)
 * [注册 API 引用](fluent-registration-api.md)
 * [（未翻译）使用 XML 配置](xml-registration-reference.md)
 * [（未翻译）给容器传递参数](passing-arguments.md)
@@ -82,7 +82,7 @@ public class RepositoriesInstaller : IWindsorInstaller
 * [生命期类型](lifestyles.md)
 * [生命周期](lifecycle.md)
 * [释放策略](release-policy.md)
-* [（未翻译）ComponentModel construction contributors](componentmodel-construction-contributors.md)
+* [组建模型构造支持器](componentmodel-construction-contributors.md)
 
 ### 扩展容器
 
