@@ -1,61 +1,61 @@
-# Frequently Asked Questions
+# 常见问题
 
-## How do I interact with the container. I mean how and where do I actually **call** it?
+## 我怎样和容器交互。如何调用？在哪里调用？
 
-Windsor is an Inversion of Control Container, that means you generally don't call it, and most of your app should be unaware of/oblivious to its presence. Interaction with the container (actually calling any methods on the container) is limited to three points in your application lifetime:
+Windsor 是 IoC 容器，也就是你一般不需要调用它，你的应用应该无视或不知道它的存在。与容器的交互（即调用容器的任何方法）应该限制在应用生命期的三个地方：
 
-* When the app starts (`Main`, `Application_Start` etc) you create the container, and call its `Install` method. Once. Notice you should only have one instance of the container.
-* Then at single point (in `Main`, `ControllerFactory` etc) you are allowed to call `Resolve`. If you need to callback to the container to pull some additional dependencies later on, use [typed factories](typed-factory-facility.md).
-* When your application ends you call `Dispose` on the container to let it clean up and release all the components.
+* 在应用启动的时候 (`Main`, `Application_Start` 等等) y创建容器，并调用容器的 `Install` 方法。一次。注意你应该只有一个容器的实例。
+* 只有一个地方(在 `Main`， `ControllerFactory` 等中) 可以调用 `Resolve`。If you need to callback to the container to pull some additional dependencies later on, use [typed factories](typed-factory-facility.md)。
+* 在应用结束的时候，调用容器的 `Dispose` 方法，让容器清理和释放所有组件。
 
-### See also
+### 还可以看看
 
-* [More in-depth discussion of how to interact with the container](three-calls-pattern.md)
-* [Inversion of Control](ioc.md)
-* [Windsor Installers](installers.md)
-* [Fluent Registration API](fluent-registration-api.md)
-* [Typed Factory Facility](typed-factory-facility.md)
+* [关于与容器交互的深入讨论](three-calls-pattern.md)
+* [IoC](ioc.md)
+* [Windsor 安装器](installers.md)
+* [Fluent 注册 API](fluent-registration-api.md)
+* [强类型工厂](typed-factory-facility.md)
 
-### External resources
+### 外部资源
 
 * [Blog post by Nicholas Blumhardt explaining thought process behind this usage (Dec 26, 2008)](http://blogs.msdn.com/b/nblumhardt/archive/2008/12/27/container-managed-application-design-prelude-where-does-the-container-belong.aspx)
 * [Blog post by Krzysztof Koźmic introducing container usage (in push scenarios) (Jun 20, 2010](http://kozmic.pl/2010/06/20/how-i-use-inversion-of-control-containers/)
 * [Blog post by Krzysztof Koźmic explaining container usage (in pull scenarios) (Jun 22, 2010](http://kozmic.pl/2010/06/22/how-i-use-inversion-of-control-containers-ndash-pulling-from/)
 
-## Why won't Windsor inject itself (`IWindsorContainer`) into my components?
+## 为什么 Windsor 不注入它自己（`IWindsorContainer`）到我的组件中？
 
-Because your components aren't supposed to be calling Windsor. This goes against the very principle of Inversion of Control. Or from practical point of view - will cause you pain and is a decision you'll regret.
+因为你的组件不应该调用 Windsor。这违反了 IoC 的根本原则。或者从实用的角度 - 将会导致你痛苦，是你会后悔的决定。
 
-### So what should I do instead
+### 那么我应该如何做
 
-See the first question.
+看第一个问题。
 
-## Why is Windsor keeping reference to my transient components?
+## 为什么 Windsor 保持对临时组件（transient）的跟踪？
 
-Windsor, by default tracks all components to ensure proper [lifecycle](lifecycle.md) management, in particular ensure that all `IDisposable` components and their dependencies will be properly disposed. You can tell Windsor to stop tracking components by setting its [release policy](release-policy.md) to `NoTrackingReleasePolicy` but be aware that this is discouraged, and you're giving up proper lifecycle management by doing so.
+Windsor，默认情况下跟踪所有的组件以确保正确的[生命周期](lifecycle.md)管理，特别是确保所有 `IDisposable`  组件和它们的依赖正确被正确回收。你可以让 Windsor 停止跟踪组件，通过设置它的[释放策略](release-policy.md)为 `NoTrackingReleasePolicy`，但是要注意的是这是不推荐的，这样做的话你放弃了正确的生命周期管理。
 
-## Why is Windsor not able to inject array or list of components?
+## 为什么 Windsor 不能注入组件的数组或列表？
 
-Windsor, by default when you have dependency on `IFoo[]`, `IEnumerable<IFoo>` or `IList<IFoo>` will check if you have a component registered for that exact type (array or list of `IFoo`), not if you have any components registered for `IFoo` (array of components, is not the same as a component which is an array). You can change the behavior to say *"When you see array or list of `IFoo` just give me all `IFoo`s you can get"* you use `CollectionResolver`. See [Resolvers](resolvers.md).
+Windsor，在默认情况下当你有一个`IFoo[]`， `IEnumerable<IFoo>` 或 `IList<IFoo>` 这样的依赖时，会检查是否有一个相同类型的组件被注册（`IFoo` 的数组或列表），而不是是否为 `IFoo` 注册了任何组件（组件的数组，与数组组件是不同的）。你可以将行为改变为 *“当你看见 `IFoo` 的数组或列表时，就给我所有你能找到的 `IFoo` t”*，使用 `CollectionResolver`。查看 [解析器](resolvers.md)。
 
-## Can I register a component with more than one service?
+## 是否可以将组件注册为多个服务？
 
-Yes, you can. This ability is called [forwarded types](forwarded-types.md).
+可以。该功能叫做 [forwarded types](forwarded-types.md).
 
-## Can I register more than one component for any given service?
+## 是否可以为任意指定服务注册多个组件？
 
-Yes, you can. However you will have to give the components unique names.
+可以。但你需要给组件唯一的名称。
 
-## Why can't Windsor resolve concrete types without registering them first?
+## 为什么 Windsor 不能解析具体（concrete）类型，在先前没有注册它们时？
 
-Because that leads to more problems than it solves. There's no good default for how such components should be configured. Also doing this might actually mask problems in your registration - you might have wanted to register a type, forget to do so, and then get mis-configured objects.
+因为比起解决的问题，它将导致更多的问题。关于应该配置多少组件没有良好的定论。同时这样做可能掩盖你的注册问题 - 你可能想要注册一个类型，但是忘了，然后得到了错误配置的对象。
 
-Having said that - there is a way to resolve components without registering them by using [Lazy Component Loaders](lazy-component-loaders.md), and Windsor (some facilities to be precise, like [WCF Integration Facility](wcf-facility.md) and [Typed Factory Facility](typed-factory-facility.md)) take advantage of that. You can too, but it's you who sets the rules for how that objects should be configured, not the container.
+话虽如此 - 有一种方法可以在不注册的情况下解析组件，通过使用 [延迟组件加载器](lazy-component-loaders.md)，Windsor （可以确定的设施，比如 [WCF 集成设施](wcf-facility.md) 和 [强类型工厂设施](typed-factory-facility.md)） 从中获益。你也可以，但那是你制定了对象应该如何配置的规则，而不是容器。
 
-## Can Windsor inject properties into existing objects?
+## Windsor可以为已存在的对象注入属性吗？
 
-No, it can't.
+不可以。
 
-## Is `null` a valid value for a dependency?
+## 依赖的有效值可以是 `null` 吗？
 
-No, it's not. `null` means *no value* and is ignored by Windsor. Be explicit - if the value is optional provide overloaded constructor that does not include it. Alternatively specify explicitly `null` as the default value in the signature of the constructor. This is the only scenario where Windsor will allow passing null.
+不可以。 `null` 意味着 *没有值* 并被 Windsor忽略。 明确指出 - 如果该值是可选的，需要提供不包含该值的构造函数。或者在构造函数的签名中将 `null` 指定为默认值。这是 Windsor 允许传递 `null` 的唯一方案。
