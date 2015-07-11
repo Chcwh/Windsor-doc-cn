@@ -86,7 +86,7 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 ### 扩展容器
 
-* [（未翻译）设施](facilities.md)
+* [设施](facilities.md)
 
 ### 知道另一个容器
 
@@ -96,5 +96,5 @@ public class RepositoriesInstaller : IWindsorInstaller
 ## 资源
 
 * [（未翻译）外部资源](external-resources.md) - screencasts, podcasts, etc
-* [（未翻译）FAQ](faq.md)
+* [FAQ](faq.md)
 * [（未翻译）路线图](roadmap.md)
