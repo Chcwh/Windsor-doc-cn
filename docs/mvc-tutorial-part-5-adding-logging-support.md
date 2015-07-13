@@ -1,26 +1,26 @@
-# Windsor Tutorial - Part Five - Adding logging support
+# Windsor 教程 - 第五部分 - 添加日志支持
 
 ## Introduction
 
-Now that we have the basic infrastructure in place it's time to start adding value to our application. Well - almost. One of the concern that should be thought on early in an application is logging. We'll use Windsor to help us configure that properly. In this part you'll see how you can use [facility](facilities.md) to extend what Windsor provides out of the box.
+现在基础设施已经到位，是时候开始为程序增加价值了。嗯 - 差不多。在应用前期应该考虑的一个是日志。我们使用 Windsor 帮助我们正确的配置日志。在这个部分你将看到如何使用 [设施](facilities.md) 来扩展 Windsor 外部支持。
 
-## Logging Facility
+## 日志设施
 
-As mentioned in one of previous parts, Windsor comes with some additional, optional facilities, which are extensions to the out of the box functionality of Windsor. In this part we'll add the [logging facility](logging-facility.md) to the application.
+就像前面提到的那样，Windsor 有一些额外的，可选的设施，是 Windsor 外部功能的扩展。这里我们为应用添加 [日志设施](logging-facility.md)。
 
-The facility provides common abstraction for major logging frameworks such as [log4net](http://logging.apache.org/log4net/index.html) and [NLog](http://nlog-project.org/) as well as built in logging mechanism of `Trace` class. This provides you with a common abstraction for the *unlikely* case of changing the logging framework after you start working on your application. More importantly though, the facility takes care of providing your classes with correct `ILogger` instance for their need, without any additional static dependency, that is present in most applications not using Castle Windsor.
+该设施为主流日志框架提供通用抽象，如 [log4net](http://logging.apache.org/log4net/index.html) 和 [NLog](http://nlog-project.org/) 以及内置 `Trace` 类的日志机制。这为你提供了一个通用抽象，用于在开始在程序上工作之后，改变日志框架。更重要的是，该设施为你的类提供了所需的正确的 `ILogger` 实例，不需要其他静态依赖，that is present in most applications not using Castle Windsor.
 
-To start we need to add the required packages. Fire up NuGet's Package Manager Console and type: `Install-Package Castle.Windsor-log4net`
+在开始之前我们需要添加需要的包。打开 NuGet 程序包管理器并输入：`Install-Package Castle.Windsor-log4net`
 
-This will pull all the required dependencies for you.
+这将你为添加所有需要的依赖。
 
 ![](images/mvc-tutorial-vs-nuget-install-log4net.png)
 
-### Installer
+### 安装器
 
-Now that we referenced the right assemblies, let us create an installer (I told you we'll have quite a few of those) to add the facility to the application.
+现在我们引用了正确的程序集，让我们创建一个安装器（我告诉过你我们将会有相当多安装器）来安装设施到应用程序。
 
-:information_source: Make sure you create the installer in the `Installers` folder, next to `ControllersInstaller`. While technically there's no need for that, it's a good idea to keep the project tidy.
+:information_source: 确保你在 `Installers` 文件夹创建安装器，在 `ControllersInstaller` 旁边。当然在技术上这是不需要的，这是保持项目整洁的好主意。
 
 ```csharp
 using Castle.Facilities.Logging;
@@ -37,11 +37,11 @@ public class LoggerInstaller : IWindsorInstaller
 }
 ```
 
-:information_source: If you're not seeing the `UseLog4Net()` method make sure you've referenced full profile (and not client profile) version of `Castle.Facilities.Logging`.
+:information_source: 如果你没有看到 `UseLog4Net()` 方法，确保你正确引用了 `Castle.Facilities.Logging` 的完整配置版（不是客户端配置）。
 
-Notice the pattern the API is using. The generic parameter specifies the type of the facility we want to add, and then we use a lambda to configure the facility (in this case telling it we'll be using log4net).
+注意API使用的模式。泛型参数指定了要添加设施的类型，然后使用 lambda 表达式配置设施（这个例子中告诉设施我们使用 log4net）。
 
-We didn't specify where log4net configuration will be located, and by default the facility will look for `log4net.config` file, which is the central point for you to change log4Net configuration apart from castle library. Let's add one to the project. It will contain standard log4net configuration, like the following example:
+我们没有指定 log4net 配置的位置，默认情况下设施将查找 `log4net.config` 文件，这是将 log4Net 配置与 castle 库分离的关键点。现在我们为项目添加一个配置文件（log4Net 配置）。它将包含标准 log4Net 配置，如下所示：
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -67,7 +67,7 @@ We didn't specify where log4net configuration will be located, and by default th
 </configuration>
 ```
 
-You should modify LoggerInstaller to add
+你需要修改 LoggerInstaller 来添加
 
 ```csharp
 [assembly: XmlConfigurator(Watch = true)]
@@ -81,11 +81,11 @@ public class LoggerInstaller : IWindsorInstaller
 }
 ```
 
-log4net documentation does a good job at explaining the meaning of each element of the file so we won't discuss that here.
+log4net 文档详细的解释了该文件每个元素的内容，这里我们不做讨论。
 
-### What we just did?
+### 我们需要做什么？
 
-"How is this used?", you might ask? All you need to do is to ask for a reference to the `ILogger` interface that resides in the `Castle.Core` assembly in the `Castle.Core.Logging` namespace, (common practice is to use a settable property rather than the constructor for that) and you're all set. The container will provide you with a configured and ready to use `ILogger` instance. To see this in action let's add a warning log entry to the `AccountController` for when the user attempts to login with a wrong password.
+“这该怎么使用？”，你可能会问。你需要做的仅仅是请求一个 `Castle.Core` 程序集中 `Castle.Core.Logging` 命名空间下的 `ILogger` 接口的引用，（通常的做法是使用可设置属性而不是构造函数）这样就行了。容器将会提供给你一个已配置，可以使用的 `ILogger` 实例。要实际看到这个，我们为 `AccountController` 添加一个警告日志记录，当用户试图使用错误密码登陆的时候。
 
 ```csharp
 public class AccountController : Controller
@@ -115,12 +115,12 @@ public class AccountController : Controller
 }
 ```
 
-Now logging in with incorrect credentials will produce a log entry, provided your log4net configuration is correct.
+现在使用错误证书登陆将会产生日志记录，只要 log4net 配置是正确的。
 
 ![](images/mvc-tutorial-log-on-failure.png)
 
-## Summary
+## 总结
 
-In closing, just remember that `ILogger` interface might exist in the logging framework that you use (as is the case with log4Net). Just take extra note that we use the `ILogger` interface that resides in `Castle.Core` assembly in `Castle.Core.Logging` namespace.
+最后，要记得 `ILogger` 接口可能在你使用的日志框架中存在（这个例子中使用 log4Net）。需要额外注意的是，我们使用包含在 `Castle.Core` 程序集的 `Castle.Core.Logging` 命名空间中的 `ILogger` 接口。
 
-Continue with the [Windsor Tutorial - Part Six - Persistence Layer](mvc-tutorial-part-6-persistence-layer.md).
+继续 [Windsor 教程 - 第六部分 - 持久化层](mvc-tutorial-part-6-persistence-layer.md).
