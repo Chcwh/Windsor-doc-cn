@@ -70,11 +70,11 @@ public class RepositoriesInstaller : IWindsorInstaller
 * [使用容器 - 如何使用、在哪里使用](three-calls-pattern.md)
 * [Windsor 安装器 - 怎样把你的组件告诉 Windsor](installers.md)
 * [注册 API 引用](fluent-registration-api.md)
-* [（未翻译）使用 XML 配置](xml-registration-reference.md)
-* [（未翻译）给容器传递参数](passing-arguments.md)
-* [（未翻译）AOP，代理，和拦截器](interceptors.md)
-* [（未翻译）调试和诊断支持](debugger-views.md)
-* [（未翻译）性能计数器支持](performance-counters.md)
+* [使用 XML 配置](xml-registration-reference.md)
+* [给容器传递参数](passing-arguments.md)
+* [AOP，代理，和拦截器](interceptors.md)
+* [调试和诊断支持](debugger-views.md)
+* [性能计数器支持](performance-counters.md)
 
 ### 自定义容器
 
@@ -97,4 +97,4 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 * [（未翻译）外部资源](external-resources.md) - screencasts, podcasts, etc
 * [FAQ](faq.md)
-* [（未翻译）路线图](roadmap.md)
+* [路线图](roadmap.md)
