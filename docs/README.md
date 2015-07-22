@@ -55,8 +55,8 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 ## 文档
 
-* [（未翻译）Windsor 3.2 更新内容](whats-new-3.2.md)
-* [（未翻译）Windsor 3.1 更新内容](whats-new-3.1.md)
+* [Windsor 3.2 更新内容](whats-new-3.2.md)
+* [Windsor 3.1 更新内容](whats-new-3.1.md)
 
 ### 概念
 
