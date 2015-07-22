@@ -1,27 +1,27 @@
-# Windsor Tutorial - ASP.NET MVC 3 application (To be Seen)
+# Windsor 教程 - ASP.NET MVC 3 应用 （To be Seen）
 
-This is introductory tutorial that will get you up to speed with using Windsor in a simple web application. The application is called *To be seen* and helps user collect information about upcoming movies, CDs, books, events etc, and set up reminders for when they come up.
+这是一个入门教程，帮助你加快在一个简单 Web 应用中使用 Windsor。该应用叫做 *To be seen* 帮助用户收集有关即将上映的电影、光盘、书籍、活动等信息，并在到来时提醒他们。
 
-The tutorial assumes no prior familiarity with Windsor, any other container or related concepts. However a sound knowledge of C# and some experience with ASP.NET (hopefully in its MVC incarnation) is required.
+本教程假定事先不熟悉 Windsor，和其他容器或相关概念。但是良好的 C# 知识和 ASP.NET 经验是必须的。
 
-You can find the entire code for finished application [on github](https://github.com/kkozmic/ToBeSeen).
+可以在 [github](https://github.com/kkozmic/ToBeSeen) 上找到完成的完整代码。
 
-## Tutorial
+## 教程
 
-So far the following parts were published:
+到目前为止以下部分已发布：
 
-### Introduction
+### 介绍
 
-* [Part One - Getting Windsor](mvc-tutorial-part-1-getting-windsor.md) discusses downloading Windsor assemblies and adding them to your project
-* [Part Two - Plugging Windsor In](mvc-tutorial-part-2-plugging-windsor-in.md) discusses creation of custom controller factory
-* [Part Three - Writing Your First Installer](mvc-tutorial-part-3-writing-your-first-installer.md) discusses writing Windsor installer
-  * [Part Three (a) - Testing Your First Installer](mvc-tutorial-part-3a-testing-your-first-installer.md) discusses testing Windsor installers (validating conventions)
-* [Part Four - Putting It All Together](mvc-tutorial-part-4-putting-it-all-together.md) discusses using all elements from previous parts to get a working application
+* [第一部分 - 获取 Windsor](mvc-tutorial-part-1-getting-windsor.md) 讨论下载 Windsor 程序集及添加到项目。
+* [第二部分 - 插入 Windsor](mvc-tutorial-part-2-plugging-windsor-in.md) 讨论自定义控制器工厂的创建
+* [第三部分 - 编写第一个安装器](mvc-tutorial-part-3-writing-your-first-installer.md) 讨论编写 Windsor 安装器
+  * [第三部分 (a) - 测试第一个安装器](mvc-tutorial-part-3a-testing-your-first-installer.md) 讨论测试 Windsor 安装器 （验证约定）
+* [第四部分 - 综合](mvc-tutorial-part-4-putting-it-all-together.md) 讨论使用以前的所有元素来获得工作程序。
 
-## Building the app
+## 构建应用
 
-* [Part Five - Adding Logging Support](mvc-tutorial-part-5-adding-logging-support.md) discusses using logging facility to add logging support to the application
-* [Part Six - Persistence Layer](mvc-tutorial-part-6-persistence-layer.md) discusses creating custom facility and registering externally created objects, as well as setting up NHibernate
-* [Part Seven - Lifestyles](mvc-tutorial-part-7-lifestyles.md) discusses using different lifestyles, per-web-request in particular
-* [Part Eight - Satisfying Dependencies](mvc-tutorial-part-8-satisfying-dependencies.md) discusses how dependencies are resolved and what approaches there is to specify dependencies
-* [Part Nine - Diagnosing missing dependency issues](mvc-tutorial-part-9-diagnosing-missing-dependency-issues.md) discusses how to approach exceptions throw from the container
+* [第五部分 - 添加日志支持](mvc-tutorial-part-5-adding-logging-support.md) 讨论使用日志设施添加日志支持到应用
+* [第六部分 - 持久层](mvc-tutorial-part-6-persistence-layer.md) 讨论创建自定义设施，并注册外部创建的对象，比如配置 NHibernate
+* [第七部分 - 生命期类型](mvc-tutorial-part-7-lifestyles.md) 讨论使用不同的生命期类型，特别是 per-web-request
+* [第八部分 - 满足依赖](mvc-tutorial-part-8-satisfying-dependencies.md) 讨论依赖是如何解析的，指定依赖的方法
+* [第九部分 - 诊断依赖丢失问题](mvc-tutorial-part-9-diagnosing-missing-dependency-issues.md) 讨论如何处理容器抛出的异常
