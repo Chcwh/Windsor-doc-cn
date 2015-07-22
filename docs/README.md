@@ -50,8 +50,8 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 通过完成一步一步的教程例子学习Windsor。
 
-* [（未翻译）基础教程](basic-tutorial.md)
-* [（未翻译）简单 ASP.NET MVC 3 应用 (待观察)](mvc-tutorial-intro.md) - 从无到有一步一步开始。 此教程帮助你快速学习 Windsor 并对容器 API 的使用和如何最有效利用容器的模式有一定了解。
+* [基础教程](basic-tutorial.md)
+* [简单 ASP.NET MVC 3 应用 （To be seen）](mvc-tutorial-intro.md) - 从无到有一步一步开始。 此教程帮助你快速学习 Windsor 并对容器 API 的使用和如何最有效利用容器的模式有一定了解。
 
 ## 文档
 
@@ -90,11 +90,11 @@ public class RepositoriesInstaller : IWindsorInstaller
 
 ### 知道另一个容器
 
-* [（未翻译）Autofac 用户](windsor-for-autofac-users.md)
-* [（未翻译）StructureMap 用户](windsor-for-structuremap-users.md)
+* [Autofac 用户](windsor-for-autofac-users.md)
+* [StructureMap 用户](windsor-for-structuremap-users.md)
 
 ## 资源
 
-* [（未翻译）外部资源](external-resources.md) - screencasts, podcasts, etc
+* [外部资源](external-resources.md) - screencasts, podcasts, etc
 * [FAQ](faq.md)
 * [路线图](roadmap.md)
