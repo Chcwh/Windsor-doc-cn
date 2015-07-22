@@ -1,14 +1,14 @@
-# Performance Counters
+# 性能计数器
 
-Windsor 3 introduces support for Windows performance counters.
+Windsor 3 引入了 Windows 性能计数器的支持。
 
-Currently Windsor publishes just one counter - "Objects tracked by release policy", which shows you the total number of objects tracked by release policy of given container.
+现在 Windsor 只提供了一个计数器 - “通过释放策略跟踪的对象（Objects tracked by release policy）”，显示了指定容器通过释放策略跟踪的对象的总数量。
 
-:information_source: **Hunting memory leaks:** This is a very useful feature, that will help you quickly validate if you have problems with non-releasing tracked component instances.
+:information_source: **寻找内存泄露：** 这是一个非常有用的特性，能够帮助快速确定是否有未释放被跟踪组件实例的问题。
 
-## Using Counters
+## 使用计数器
 
-This feature is not enabled by default. The following code shows how you can enable it:
+该特性默认没有开启。下面的代码演示了如何启用计数器：
 
 ```csharp
 var container = new WindsorContainer();
@@ -17,16 +17,16 @@ var counter = LifecycledComponentsReleasePolicy.GetTrackedComponentsPerformanceC
 container.Kernel.ReleasePolicy = new LifecycledComponentsReleasePolicy(diagnostic, counter);
 ```
 
-Then Windsor will inspect if it has all required permissions, and if it does, it will ensure the right category and counters are created and will update the counter as the application(s) run.
+Windsor 将会检查其是否有必须的权限，如果有，Windsor 将会确保正确的策略和创建计数器，并在程序运行时更新计数器。
 
-In order to see the data open Performance Monitor (part of Computer Management console accessible from Administrative Tools section of your Windows Control Panel). Then click Add (Ctrl+N) and find "Castle Windsor" section. As noted above it will contain just one counter - "Objects tracked by release policy", and list of its instances.
+为了看到计数器的数据，打开性能监视器（Performance Monitor）（计算机管理的一部分，可以通过控制面板的管理工具区访问）。Then click Add (Ctrl+N) and find "Castle Windsor" section. As noted above it will contain just one counter - "Objects tracked by release policy", and list of its instances.
 
-List of instances of Windsor performance counter:
+Windsor 性能监视器实例列表：
 
 ![](images/perf-counter-setup.png)
 
-For example on the image above you can see there are two instances of the counter. Each of them comes from separate instance of the same application. After you select them you will be able to track, live, total number of all tracked component instances in each of the containers.
+上图所示的例子中，有两个监视器的例子。它们来自同一个应用的不同实例。选择它们后，就可以跟踪每个容器所有被跟踪组件实例的总数量了。
 
-List of tracked instances in each container:
+每个容器被跟踪实例的列表：
 
 ![](images/perf-counter-instances.png)
