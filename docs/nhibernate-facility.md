@@ -39,7 +39,7 @@ With this scenario you have to control transactions and share sessions instances
 
 ## Integration level 2
 
-The second level of integration introduce the ISessionManager interface so you can use session and leave to the ISessionManager implementation the responsability of sharing compatible session within an invocation chain and be aware of transactions.
+The second level of integration introduce the ISessionManager interface so you can use session and leave to the ISessionManager implementation the responsibility of sharing compatible session within an invocation chain and be aware of transactions.
 
 ## Configuration
 

@@ -13,7 +13,7 @@ IKernel container = new DefaultKernel();
 
 ## Making components startable
 
-Component need not to be changed at all to become a startable. The only thing required is to call `Start` extention method during component's registration
+Component need not to be changed at all to become a startable. The only thing required is to call `Start` extension method during component's registration
 
 ```csharp
 container.Register(
