@@ -16,7 +16,7 @@ Just install the facility and add the proper configuration
          type="Castle.Facilities.ActiveRecordIntegration.ActiveRecordFacility, Castle.Facilities.ActiveRecordIntegration"
          isDebug="false"
          isWeb="false">
-         <!-- Configure the namespaces for the models using Active Record Intergration -->
+         <!-- Configure the namespaces for the models using Active Record Integration -->
          <assemblies>
             <item>Company.Project.Model</item>
          </assemblies>

@@ -4,7 +4,7 @@
 
 Component activator is used by Windsor to instantiate components, and perform all additional set up logic, like setting properties, decorating services with proxy etc. Activators implement `IComponentActivator` interface.
 
-:information_source: **Activators instantiate components - always:** Each call to activator's `Create` method should result in a new instance being returned. If you want to manage instance lifetime, that is make a component a singleton, or reuse it withing a scope of web request etc you need a [LifeStyle manager](lifestyles.md).
+:information_source: **Activators instantiate components - always:** Each call to activator's `Create` method should result in a new instance being returned. If you want to manage instance lifetime, that is make a component a singleton, or reuse it within a scope of web request etc you need a [LifeStyle manager](lifestyles.md).
 
 ## Writing custom activators
 

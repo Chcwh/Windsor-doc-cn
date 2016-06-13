@@ -49,4 +49,4 @@ Kernel.ComponentModelBuilder.RemoveContributor(propInjector);
 
 ### Replacing the PropertiesDependenciesModelInspector
 
-`PropertiesDependenciesModelInspector` can be subclassed, and the method `InspectProperties` can be overridden to accomodate specialized logic to support your needed scenario.
+`PropertiesDependenciesModelInspector` can be subclassed, and the method `InspectProperties` can be overridden to accommodate specialized logic to support your needed scenario.
